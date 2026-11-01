@@ -634,14 +634,21 @@ onUnmounted(() => {
   <AppPage
     width="capture"
     :fill="isMobile"
-    :class="showPinnedAction ? '!pb-2' : undefined"
+    :class="[
+      showPinnedAction ? '!pb-2' : '',
+      isMobile && showUploadSources && !pending.length ? '!py-3' : '',
+    ]"
   >
     <div
       class="flex min-w-0 max-w-full flex-col"
       :class="isMobile
-        ? (showPinnedAction
-          ? 'min-h-0 flex-1 gap-3 overflow-x-hidden overflow-y-hidden'
-          : 'min-h-0 flex-1 gap-5 overflow-x-hidden overflow-y-auto')
+        ? (
+          showUploadSources && !pending.length
+            ? 'min-h-0 flex-1 gap-2.5 overflow-x-hidden overflow-y-hidden'
+            : showPinnedAction
+              ? 'min-h-0 flex-1 gap-3 overflow-x-hidden overflow-y-hidden'
+              : 'min-h-0 flex-1 gap-3 overflow-x-hidden overflow-y-auto'
+        )
         : 'gap-5'"
     >
       <div
@@ -654,30 +661,32 @@ onUnmounted(() => {
         <div
           v-if="showUploadSources || pending.length"
           class="flex min-w-0 max-w-full flex-col gap-5"
-          :class="isMobile && showUploadSources && !pending.length ? 'h-full min-h-0' : ''"
+          :class="isMobile && showUploadSources && !pending.length ? 'h-full min-h-0 gap-2.5' : ''"
         >
       <!-- Mobile: capture source actions (hidden once something is in this session) -->
       <div
         v-if="isMobile && showUploadSources"
-        class="flex min-w-0 max-w-full flex-col gap-3"
-        :class="!pending.length ? 'min-h-0 flex-1' : ''"
+        class="flex min-w-0 max-w-full flex-col"
+        :class="!pending.length ? 'min-h-0 flex-1 gap-2.5' : 'gap-3'"
       >
         <!-- label+for: iOS ignores .click() on display:none file inputs -->
         <label
           for="capture-camera-input"
-          class="flex w-full cursor-pointer flex-col items-center justify-center rounded-3xl bg-primary px-4 text-white shadow-sm ring-1 ring-primary/30 hover:bg-blue-600"
+          class="flex w-full min-h-0 cursor-pointer flex-col items-center justify-center rounded-3xl bg-primary px-4 text-white shadow-sm ring-1 ring-primary/30 hover:bg-blue-600"
           :class="[
-            pending.length ? 'h-28' : 'h-[12.5rem] px-6',
+            pending.length
+              ? 'h-28 shrink-0'
+              : 'h-[min(12.5rem,26svh)] min-h-[5.5rem] flex-[1.35] px-6',
             submitting ? 'pointer-events-none opacity-60' : '',
           ]"
         >
           <span
             class="flex items-center justify-center rounded-full bg-white/15 ring-1 ring-white/25"
-            :class="pending.length ? 'h-11 w-11' : 'h-14 w-14'"
+            :class="pending.length ? 'h-11 w-11' : 'size-[min(3.5rem,8svh)]'"
             aria-hidden="true"
           >
             <svg
-              :class="pending.length ? 'h-5 w-5' : 'h-7 w-7'"
+              :class="pending.length ? 'h-5 w-5' : 'size-[min(1.75rem,4.5svh)]'"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -688,96 +697,111 @@ onUnmounted(() => {
           </span>
           <span
             class="font-bold tracking-tight"
-            :class="pending.length ? 'mt-2 text-base' : 'mt-3 text-lg'"
+            :class="pending.length ? 'mt-2 text-base' : 'mt-2 text-[clamp(0.95rem,2.8svh,1.125rem)]'"
           >{{ t('capture_take_photo') }}</span>
         </label>
 
-        <div class="grid min-w-0 grid-cols-2 gap-3">
+        <div
+          class="grid min-w-0 grid-cols-2"
+          :class="pending.length ? 'gap-3' : 'min-h-[4.25rem] flex-1 gap-2.5'"
+        >
           <label
             for="capture-gallery-input"
-            class="flex min-w-0 cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border border-gray-200 bg-white px-2 text-center shadow-sm hover:border-primary/25 hover:bg-soft-blue"
+            class="flex min-w-0 cursor-pointer flex-col items-center justify-center rounded-3xl border border-gray-200 bg-white px-2 text-center shadow-sm hover:border-primary/25 hover:bg-soft-blue"
             :class="[
-              pending.length ? 'h-24' : 'h-[7.25rem] px-3',
+              pending.length
+                ? 'h-24 gap-2'
+                : 'h-[min(7.25rem,14svh)] min-h-[4.25rem] gap-1.5 px-3',
               submitting ? 'pointer-events-none opacity-60' : '',
             ]"
           >
             <span
               class="flex items-center justify-center rounded-2xl bg-soft-blue text-primary"
-              :class="pending.length ? 'h-9 w-9' : 'h-11 w-11'"
+              :class="pending.length ? 'h-9 w-9' : 'size-[min(2.75rem,6.5svh)]'"
               aria-hidden="true"
             >
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </span>
-            <span class="truncate text-sm font-semibold text-gray-900">{{ t('capture_gallery') }}</span>
+            <span
+              class="truncate font-semibold text-gray-900"
+              :class="pending.length ? 'text-sm' : 'text-[clamp(0.75rem,2.2svh,0.875rem)]'"
+            >{{ t('capture_gallery') }}</span>
           </label>
           <label
             for="capture-file-input"
-            class="flex min-w-0 cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border border-gray-200 bg-white px-2 text-center shadow-sm hover:border-primary/25 hover:bg-soft-blue"
+            class="flex min-w-0 cursor-pointer flex-col items-center justify-center rounded-3xl border border-gray-200 bg-white px-2 text-center shadow-sm hover:border-primary/25 hover:bg-soft-blue"
             :class="[
-              pending.length ? 'h-24' : 'h-[7.25rem] px-3',
+              pending.length
+                ? 'h-24 gap-2'
+                : 'h-[min(7.25rem,14svh)] min-h-[4.25rem] gap-1.5 px-3',
               submitting ? 'pointer-events-none opacity-60' : '',
             ]"
           >
             <span
               class="flex items-center justify-center rounded-2xl bg-soft-blue text-primary"
-              :class="pending.length ? 'h-9 w-9' : 'h-11 w-11'"
+              :class="pending.length ? 'h-9 w-9' : 'size-[min(2.75rem,6.5svh)]'"
               aria-hidden="true"
             >
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" />
               </svg>
             </span>
-            <span class="truncate text-sm font-semibold text-gray-900">{{ t('capture_pdf_files') }}</span>
+            <span
+              class="truncate font-semibold text-gray-900"
+              :class="pending.length ? 'text-sm' : 'text-[clamp(0.75rem,2.2svh,0.875rem)]'"
+            >{{ t('capture_pdf_files') }}</span>
           </label>
         </div>
 
         <div
           v-if="!pending.length"
-          class="mt-2 flex flex-1 flex-col justify-center px-1 pb-2"
+          class="flex min-h-0 shrink justify-end px-1"
         >
-          <p class="text-center text-xs font-semibold uppercase tracking-wide text-gray-400">
-            {{ t('capture_how_it_works') }}
-          </p>
-          <ol class="mt-4 space-y-4 text-sm leading-relaxed text-gray-600">
-            <li class="flex gap-3">
-              <span
-                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-soft-blue text-xs font-bold text-primary"
-                aria-hidden="true"
-              >1</span>
-              <div>
-                <p class="font-semibold text-gray-900">{{ t('capture_step1_title') }}</p>
-                <p class="mt-0.5">
-                  {{ t('capture_step1_body', { profile: auth.activeProfile?.name || t('capture_your_profile') }) }}
-                </p>
-              </div>
-            </li>
-            <li class="flex gap-3">
-              <span
-                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-soft-blue text-xs font-bold text-primary"
-                aria-hidden="true"
-              >2</span>
-              <div>
-                <p class="font-semibold text-gray-900">{{ t('capture_step2_title') }}</p>
-                <p class="mt-0.5">
-                  {{ t('capture_step2_body') }}
-                </p>
-              </div>
-            </li>
-            <li class="flex gap-3">
-              <span
-                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-soft-blue text-xs font-bold text-primary"
-                aria-hidden="true"
-              >3</span>
-              <div>
-                <p class="font-semibold text-gray-900">{{ t('capture_step3_title') }}</p>
-                <p class="mt-0.5">
-                  {{ t('capture_step3_body') }}
-                </p>
-              </div>
-            </li>
-          </ol>
+          <div class="w-full min-h-0">
+            <p class="text-center text-[clamp(0.65rem,1.8svh,0.75rem)] font-semibold uppercase tracking-wide text-gray-400">
+              {{ t('capture_how_it_works') }}
+            </p>
+            <ol class="mt-[clamp(0.5rem,1.8svh,1rem)] space-y-[clamp(0.4rem,1.6svh,0.85rem)] text-[clamp(0.72rem,2.1svh,0.875rem)] leading-snug text-gray-600">
+              <li class="flex gap-2.5">
+                <span
+                  class="flex size-[clamp(1.35rem,3.6svh,1.75rem)] shrink-0 items-center justify-center rounded-full bg-soft-blue text-[0.65rem] font-bold text-primary"
+                  aria-hidden="true"
+                >1</span>
+                <div class="min-w-0">
+                  <p class="font-semibold text-gray-900">{{ t('capture_step1_title') }}</p>
+                  <p class="mt-0.5 text-gray-600">
+                    {{ t('capture_step1_body', { profile: auth.activeProfile?.name || t('capture_your_profile') }) }}
+                  </p>
+                </div>
+              </li>
+              <li class="flex gap-2.5">
+                <span
+                  class="flex size-[clamp(1.35rem,3.6svh,1.75rem)] shrink-0 items-center justify-center rounded-full bg-soft-blue text-[0.65rem] font-bold text-primary"
+                  aria-hidden="true"
+                >2</span>
+                <div class="min-w-0">
+                  <p class="font-semibold text-gray-900">{{ t('capture_step2_title') }}</p>
+                  <p class="mt-0.5 text-gray-600">
+                    {{ t('capture_step2_body') }}
+                  </p>
+                </div>
+              </li>
+              <li class="flex gap-2.5">
+                <span
+                  class="flex size-[clamp(1.35rem,3.6svh,1.75rem)] shrink-0 items-center justify-center rounded-full bg-soft-blue text-[0.65rem] font-bold text-primary"
+                  aria-hidden="true"
+                >3</span>
+                <div class="min-w-0">
+                  <p class="font-semibold text-gray-900">{{ t('capture_step3_title') }}</p>
+                  <p class="mt-0.5 text-gray-600">
+                    {{ t('capture_step3_body') }}
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
         </div>
       </div>
 

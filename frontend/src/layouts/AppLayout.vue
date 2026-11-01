@@ -212,46 +212,46 @@ const profileLabel = computed(() => auth.activeProfile?.name ?? t('label_no_prof
     </main>
 
     <nav
-      class="z-30 shrink-0 overflow-visible border-t border-gray-100 bg-white pb-[max(0.375rem,var(--rp-sab))] pt-1 md:hidden"
+      class="z-30 shrink-0 border-t border-gray-100 bg-white pb-[max(0.375rem,var(--rp-sab))] pt-1 md:hidden"
       :aria-label="t('nav_primary')"
     >
-      <div class="mx-auto grid max-w-lg grid-cols-5 items-stretch gap-0.5 px-1 py-1.5">
+      <div class="mx-auto grid max-w-lg grid-cols-5 items-stretch gap-0.5 px-1 py-1">
         <RouterLink
           v-for="item in nav"
           :key="item.name"
           :to="item.to"
-          class="flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1.5 text-center text-[10px] font-semibold leading-tight sm:text-xs"
+          class="flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1 text-center text-[10px] font-semibold leading-none sm:text-xs"
           :class="[
             isActive(item.name) ? 'bg-soft-blue text-primary' : 'text-gray-500',
             item.emphasize && !isActive(item.name) ? 'text-primary' : '',
           ]"
         >
           <span
-            class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
+            class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
             :class="item.emphasize
               ? (isActive(item.name) ? 'bg-primary text-white' : 'bg-primary/10 text-primary')
               : (isActive(item.name) ? 'text-primary' : 'text-current')"
             aria-hidden="true"
           >
-            <svg v-if="item.icon === 'home'" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg v-if="item.icon === 'home'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 10.5l9-7 9 7V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9.5z" />
             </svg>
-            <svg v-else-if="item.icon === 'record'" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg v-else-if="item.icon === 'record'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 5.75A1.75 1.75 0 015.75 4h3.5A1.75 1.75 0 0111 5.75v3.5A1.75 1.75 0 019.25 11h-3.5A1.75 1.75 0 014 9.25v-3.5zM13 5.75A1.75 1.75 0 0114.75 4h3.5A1.75 1.75 0 0120 5.75v3.5A1.75 1.75 0 0118.25 11h-3.5A1.75 1.75 0 0113 9.25v-3.5zM4 14.75A1.75 1.75 0 015.75 13h3.5A1.75 1.75 0 0111 14.75v3.5A1.75 1.75 0 019.25 20h-3.5A1.75 1.75 0 014 18.25v-3.5zM13 14.75A1.75 1.75 0 0114.75 13h3.5A1.75 1.75 0 0120 14.75v3.5A1.75 1.75 0 0118.25 20h-3.5A1.75 1.75 0 0113 18.25v-3.5z" />
             </svg>
-            <svg v-else-if="item.icon === 'capture'" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg v-else-if="item.icon === 'capture'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <svg v-else-if="item.icon === 'recent'" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg v-else-if="item.icon === 'recent'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 8v4l2.5 1.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <svg v-else class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </span>
-          {{ item.labelMobile }}
+          <span class="max-w-full truncate">{{ item.labelMobile }}</span>
         </RouterLink>
       </div>
     </nav>
