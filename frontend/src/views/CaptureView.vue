@@ -634,10 +634,7 @@ onUnmounted(() => {
   <AppPage
     width="capture"
     :fill="isMobile"
-    :class="[
-      showPinnedAction ? '!pb-2' : '',
-      isMobile && showUploadSources && !pending.length ? '!py-3' : '',
-    ]"
+    :class="showPinnedAction ? '!pb-2' : undefined"
   >
     <div
       class="flex min-w-0 max-w-full flex-col"
