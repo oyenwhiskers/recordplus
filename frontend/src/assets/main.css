@@ -196,12 +196,8 @@
   --rp-sar: env(safe-area-inset-right, 0px);
 }
 
-/* Installed app: Android 3-button nav often reports inset 0 while still covering content */
+/* shortcut: no forced min bottom inset — OS already reserves 3-button nav outside svh on many Androids; forcing 48px stacked a dead gap under the tab bar. Revisit if edge-to-edge devices report 0 while overlapping tabs. */
 @media (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
-  :root {
-    --rp-sab: max(48px, env(safe-area-inset-bottom, 0px));
-  }
-
   html {
     height: 100%;
     height: 100svh;
@@ -211,7 +207,6 @@
 html.rp-pwa {
   height: 100%;
   height: 100svh;
-  --rp-sab: max(48px, env(safe-area-inset-bottom, 0px));
 }
 
 html,

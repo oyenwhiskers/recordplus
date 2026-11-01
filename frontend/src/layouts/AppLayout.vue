@@ -212,14 +212,15 @@ const profileLabel = computed(() => auth.activeProfile?.name ?? t('label_no_prof
     </main>
 
     <nav
-      class="z-30 shrink-0 border-t border-gray-100 bg-white pb-[max(0.375rem,var(--rp-sab))] md:hidden"
+      class="z-30 shrink-0 border-t border-gray-100 bg-white pb-[max(0.25rem,var(--rp-sab))] pt-0.5 md:hidden"
       :aria-label="t('nav_primary')"
-    >      <div class="mx-auto grid max-w-lg grid-cols-5 gap-0.5 px-1 py-1.5">
+    >
+      <div class="mx-auto grid max-w-lg grid-cols-5 gap-0.5 px-1 pb-0.5 pt-1">
         <RouterLink
           v-for="item in nav"
           :key="item.name"
           :to="item.to"
-          class="flex min-h-12 flex-col items-center justify-center rounded-xl px-1 py-1.5 text-center text-[10px] font-semibold leading-tight sm:text-xs"
+          class="flex min-h-11 flex-col items-center justify-center rounded-xl px-1 py-1 text-center text-[10px] font-semibold leading-tight sm:text-xs"
           :class="[
             isActive(item.name) ? 'bg-soft-blue text-primary' : 'text-gray-500',
             item.emphasize && !isActive(item.name) ? 'text-primary' : '',
