@@ -36,5 +36,23 @@ export async function setupPwa(): Promise<void> {
   setupPwaInstallListeners()
 
   const { registerSW } = await import('virtual:pwa-register')
-  registerSW({ immediate: true })
+  registerSW({
+    immediate: true,
+    onRegisteredSW(_swUrl, registration) {
+      if (!registration) {
+        return
+      }
+
+      // Phones (esp. installed PWA) often skip update checks until resume.
+      const check = () => {
+        void registration.update()
+      }
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          check()
+        }
+      })
+      window.addEventListener('focus', check)
+    },
+  })
 }
