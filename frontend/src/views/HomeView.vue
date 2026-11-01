@@ -438,6 +438,12 @@ watch(
               </div>
               <div v-else class="min-w-0 flex-1">
                 <div class="flex min-w-0 items-center gap-1.5">
+                  <p class="truncate text-sm font-medium text-gray-900">
+                    {{ profile.name }}
+                    <span v-if="profile.id === auth.activeProfile?.id" class="sr-only">
+                      ({{ t('label_current_profile') }})
+                    </span>
+                  </p>
                   <svg
                     v-if="profile.id === auth.activeProfile?.id"
                     class="h-4 w-4 shrink-0 text-primary"
@@ -451,12 +457,6 @@ watch(
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <p class="truncate text-sm font-medium text-gray-900">
-                    {{ profile.name }}
-                    <span v-if="profile.id === auth.activeProfile?.id" class="sr-only">
-                      ({{ t('label_current_profile') }})
-                    </span>
-                  </p>
                 </div>
                 <p class="text-xs text-gray-400">
                   {{ profile.categories?.length ?? 0 }}
