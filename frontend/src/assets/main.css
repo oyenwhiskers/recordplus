@@ -258,8 +258,18 @@ select.rp-select {
   gap: 1rem;
 }
 
+.hero-feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
 .hero-copy-actions {
-  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .hero-section-overlay {
@@ -308,12 +318,17 @@ select.rp-select {
   }
 
   .hero-copy {
-    display: block;
-    gap: 0;
+    gap: 1.25rem;
+  }
+
+  .hero-feature-tags {
+    justify-content: flex-start;
   }
 
   .hero-copy-actions {
-    margin-top: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .hero-section-overlay {

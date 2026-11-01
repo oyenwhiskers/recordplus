@@ -33,7 +33,7 @@ async function submit() {
 
 <template>
   <AuthShell :title="t('login_welcome_title')" :subtitle="t('login_welcome_subtitle')" show-media>
-    <form class="space-y-3" @submit.prevent="submit">
+    <form class="space-y-2.5 sm:space-y-3" @submit.prevent="submit">
       <div>
         <label for="login-email" class="sr-only">{{ t('label_email') }}</label>
         <input
@@ -43,7 +43,7 @@ async function submit() {
           required
           autocomplete="email"
           autofocus
-          class="w-full rounded-xl border-2 border-transparent bg-soft-blue px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-primary focus:bg-white"
+          class="w-full rounded-xl border-2 border-transparent bg-soft-blue px-4 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-primary focus:bg-white sm:py-3"
           :placeholder="t('login_email_placeholder')"
         />
       </div>
@@ -57,7 +57,7 @@ async function submit() {
             :type="showPassword ? 'text' : 'password'"
             required
             autocomplete="current-password"
-            class="w-full rounded-xl border-2 border-transparent bg-soft-blue px-4 py-3 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-primary focus:bg-white"
+            class="w-full rounded-xl border-2 border-transparent bg-soft-blue px-4 py-2.5 pr-12 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-primary focus:bg-white sm:py-3"
             :placeholder="t('login_password_placeholder')"
           />
           <button
@@ -79,7 +79,7 @@ async function submit() {
 
       <div
         v-if="error"
-        class="rounded-xl border border-red-100 bg-red-50 px-3.5 py-3 text-sm text-red-700"
+        class="rounded-xl border border-red-100 bg-red-50 px-3.5 py-2.5 text-sm text-red-700 sm:py-3"
         role="alert"
       >
         {{ error }}
@@ -87,7 +87,7 @@ async function submit() {
 
       <button
         type="submit"
-        class="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(45,107,255,0.28)] transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+        class="mt-0.5 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(45,107,255,0.28)] transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60 sm:py-3"
         :disabled="loading"
       >
         <svg
@@ -106,7 +106,7 @@ async function submit() {
 
     <SocialAuthButtons />
 
-    <p class="mt-4 text-center text-sm text-gray-500">
+    <p class="mt-2.5 text-center text-sm text-gray-500 sm:mt-4">
       <RouterLink to="/register" class="font-semibold text-primary hover:underline">
         {{ t('login_create_account') }}
       </RouterLink>

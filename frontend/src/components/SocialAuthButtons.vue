@@ -10,7 +10,7 @@ function onGoogle() {
 
 <template>
   <div>
-    <div class="relative my-4">
+    <div class="relative my-2.5 sm:my-4">
       <div class="absolute inset-0 flex items-center" aria-hidden="true">
         <div class="w-full border-t border-gray-200" />
       </div>
@@ -21,7 +21,7 @@ function onGoogle() {
 
     <button
       type="button"
-      class="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-primary/40 hover:bg-soft-blue"
+      class="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-primary/40 hover:bg-soft-blue sm:py-3"
       @click="onGoogle"
     >
       <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">

@@ -190,11 +190,11 @@ async function onLandingInstall(): Promise<void> {
               {{ t('landing_hero_title_before') }}
               <span class="text-primary underline decoration-primary decoration-2 underline-offset-4 md:no-underline">{{ t('landing_hero_title_accent') }}</span>
             </h1>
-            <p class="text-base leading-relaxed text-gray-600 md:mt-5 md:text-lg">
+            <p class="text-base leading-relaxed text-gray-600 md:text-lg">
               {{ t('landing_hero_subtitle') }}
             </p>
 
-            <div class="flex flex-wrap justify-center gap-3 md:mt-6 md:justify-start">
+            <div class="hero-feature-tags">
               <span class="hero-feature-tag">
                 <svg class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -216,7 +216,7 @@ async function onLandingInstall(): Promise<void> {
               </span>
             </div>
 
-            <div class="hero-copy-actions flex flex-col items-center gap-3 md:mt-8 md:flex-row md:items-center md:justify-start">
+            <div class="hero-copy-actions">
               <RouterLink
                 to="/register"
                 class="inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 md:w-auto md:min-w-[12.5rem] md:py-3.5"

@@ -140,7 +140,7 @@ async function submit() {
 
     <SocialAuthButtons />
 
-    <p class="mt-4 text-center text-sm text-gray-500">
+    <p class="mt-2.5 text-center text-sm text-gray-500 sm:mt-4">
       {{ t('register_have_account') }}
       <RouterLink to="/login" class="font-semibold text-primary hover:underline">{{ t('action_sign_in') }}</RouterLink>
     </p>
