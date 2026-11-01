@@ -59,6 +59,28 @@ class DocumentInterpretationTest extends TestCase
         $this->assertFalse($result['extracted_data']['interpretation']['expense_eligible']);
     }
 
+    public function test_receipt_with_only_total_due_is_coerced_to_invoice(): void
+    {
+        $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([
+            'document_type' => 'Receipt',
+            'merchant' => 'boong',
+            'amounts' => [[
+                'value' => 174.35,
+                'currency' => 'MYR',
+                'role' => 'total_due',
+                'payment_status' => 'unpaid',
+                'uncertain' => false,
+            ]],
+            'dates' => [],
+        ], []);
+
+        $this->assertSame('Invoice', $result['document_type']);
+        $this->assertSame('174.35', $result['amount']);
+        $this->assertSame('MYR', $result['currency']);
+        $this->assertSame('total_due', $result['extracted_data']['interpretation']['primary_amount_role']);
+        $this->assertFalse($result['extracted_data']['interpretation']['expense_eligible']);
+    }
+
     public function test_insurance_coverage_is_not_primary_or_expense_eligible(): void
     {
         $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([

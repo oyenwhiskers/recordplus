@@ -304,7 +304,8 @@ class FilingContextTest extends TestCase
                 && str_contains($text, 'filing_context')
                 && str_contains($text, 'Do NOT return a title')
                 && str_contains($text, 'Warranty')
-                && str_contains($text, 'Academic Certificate');
+                && str_contains($text, 'Academic Certificate')
+                && str_contains($text, 'Payment not completed (COD');
         });
     }
 

@@ -138,6 +138,12 @@ amounts: zero or more objects:
 { "value": number, "currency": "ISO or null", "role": one of [{$amountRoles}], "payment_status": one of [{$paymentStatuses}] or null, "related_date": "YYYY-MM-DD or null", "uncertain": boolean }
 Examples: insurance premium + coverage; invoice total_due; receipt paid; bank balance. Omit amounts that are unclear.
 
+Marketplace / e-commerce order pages (Shopee, TikTok Shop, etc.):
+- Prefer the labeled Total / Order Total / Total Payment. Never invent a total from unit price × qty when a labeled total exists.
+- Payment not completed (COD, unpaid, awaiting payment, in transit without paid evidence) -> document_type Invoice, amount role total_due, payment_status unpaid.
+- Payment completed / paid receipt / payment evidence -> document_type Receipt, amount role paid, payment_status paid or evidence_present.
+- UI tags like "Refund for missing items" are not refunds unless a refund amount is shown.
+
 dates: zero or more objects:
 { "value": "YYYY-MM-DD", "role": one of [{$dateRoles}], "uncertain": boolean }
 Include document/transaction/due/expiry/renewal/period dates only when clearly present.
@@ -315,6 +321,11 @@ PROMPT;
             ];
         }
 
+        // COD / unpaid order screenshots often arrive as Receipt + total_due; Invoice path stores the total.
+        if ($documentType === 'Receipt' && $this->shouldCoerceReceiptTotalDueToInvoice($amounts)) {
+            $documentType = 'Invoice';
+        }
+
         $sanitized = [
             'document_type' => $documentType,
             'merchant' => $this->nullableString($parsed['merchant'] ?? null),
@@ -351,6 +362,28 @@ PROMPT;
             'filing_context' => $filingContext,
             'extracted_data' => $interpreted['extracted_data'],
         ];
+    }
+
+    /**
+     * @param  list<array{value: string, currency: ?string, role: string, payment_status: ?string, related_date: ?string, uncertain: bool}>  $amounts
+     */
+    private function shouldCoerceReceiptTotalDueToInvoice(array $amounts): bool
+    {
+        $clearPaid = array_values(array_filter(
+            $amounts,
+            fn (array $amount): bool => ($amount['role'] ?? null) === 'paid' && empty($amount['uncertain']),
+        ));
+
+        if ($clearPaid !== []) {
+            return false;
+        }
+
+        $clearTotalDue = array_values(array_filter(
+            $amounts,
+            fn (array $amount): bool => ($amount['role'] ?? null) === 'total_due' && empty($amount['uncertain']),
+        ));
+
+        return count($clearTotalDue) === 1;
     }
 
     /**
