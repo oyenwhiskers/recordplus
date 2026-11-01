@@ -199,12 +199,8 @@
   --rp-auth-chrome-compact: 26rem;
 }
 
-/* shortcut: floor top inset only in installed PWA — some Androids report 0 under a translucent status bar. Do not floor bottom: 3-button nav often sits outside svh and a fake sab stacks a dead gap under the tab bar. */
+/* shortcut: no forced min top/bottom insets — opaque Android status/nav chrome already sits outside the WebView; flooring sat/sab stacked dead gaps. Revisit if edge-to-edge devices report 0 while overlapping content. */
 @media (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
-  :root {
-    --rp-sat: max(env(safe-area-inset-top, 0px), 1.25rem);
-  }
-
   html {
     height: 100%;
     height: 100svh;
@@ -212,7 +208,6 @@
 }
 
 html.rp-pwa {
-  --rp-sat: max(env(safe-area-inset-top, 0px), 1.25rem);
   height: 100%;
   height: 100svh;
 }
