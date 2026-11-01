@@ -20,7 +20,7 @@ withDefaults(
       aria-hidden="true"
     />
 
-    <header class="relative z-20 shrink-0 px-4 pb-1 pt-4 sm:px-6 sm:pt-5 lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pt-7">
+    <header class="relative z-20 shrink-0 px-4 pb-1 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:pt-[max(1.25rem,env(safe-area-inset-top))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pt-7">
       <RouterLink to="/" class="inline-flex items-center gap-2.5">
         <img
           src="/recordplus_logo_app.png"
@@ -41,7 +41,7 @@ withDefaults(
       >
         <!-- Form column -->
         <section
-          class="flex min-h-0 flex-1 flex-col items-center justify-start px-4 pb-4 pt-1 sm:px-6 lg:items-center lg:justify-center lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
+          class="flex min-h-0 flex-1 flex-col items-center justify-start px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-1 sm:px-6 lg:items-center lg:justify-center lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
         >
           <div class="flex w-full max-w-[22rem] flex-col lg:max-w-[26rem]">
             <!-- Mobile / tablet sprite above form -->

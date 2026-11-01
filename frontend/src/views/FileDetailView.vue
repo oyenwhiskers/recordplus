@@ -676,7 +676,7 @@ onUnmounted(() => {
       />
 
       <div
-        class="relative z-10 flex h-dvh w-full flex-col bg-white md:h-auto md:max-h-[min(44rem,92vh)] md:max-w-2xl md:rounded-2xl md:shadow-xl"
+        class="relative z-10 flex h-dvh w-full flex-col bg-white pt-[env(safe-area-inset-top)] md:h-auto md:max-h-[min(44rem,92vh)] md:max-w-2xl md:rounded-2xl md:pt-0 md:shadow-xl"
       >
         <div class="flex shrink-0 items-center gap-2 border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
           <button
@@ -1015,7 +1015,7 @@ onUnmounted(() => {
 
         <div
           v-if="document && editing"
-          class="flex shrink-0 gap-2 border-t border-gray-100 px-4 py-3 sm:px-6"
+          class="flex shrink-0 gap-2 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6 md:pb-3"
         >
           <button
             type="button"
@@ -1037,7 +1037,7 @@ onUnmounted(() => {
 
         <div
           v-else-if="document && !editing"
-          class="flex shrink-0 items-center gap-2.5 border-t border-gray-100 px-4 py-3 sm:px-6"
+          class="flex shrink-0 items-center gap-2.5 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6 md:pb-3"
         >
           <button
             type="button"

@@ -61,7 +61,7 @@ async function onLandingInstall(): Promise<void> {
 
 <template>
   <div class="min-h-dvh bg-background font-sans text-gray-900 antialiased">
-    <header class="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
+    <header class="sticky top-0 z-50 border-b border-gray-100 bg-white/90 pt-[env(safe-area-inset-top)] backdrop-blur">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <RouterLink to="/" class="flex items-center gap-3" @click="menuOpen = false">
           <img src="/recordplus_logo_app.png" alt="" class="h-10 w-10 rounded-xl" width="40" height="40" aria-hidden="true" />
@@ -121,7 +121,7 @@ async function onLandingInstall(): Promise<void> {
           aria-modal="true"
           aria-labelledby="landing-drawer-title"
         >
-          <div class="flex items-center justify-between border-b border-gray-100 px-4 py-4">
+          <div class="flex items-center justify-between border-b border-gray-100 px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))]">
             <RouterLink to="/" class="flex items-center gap-2.5" @click="closeMenu">
               <img
                 src="/recordplus_logo_app.png"
