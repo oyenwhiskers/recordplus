@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { fileURLToPath, URL } from 'node:url'
 import path from 'node:path'
+import { PWA_NAVIGATE_FALLBACK_DENYLIST } from './src/lib/pwaServerPaths'
 
 function originFromUrl(value: string, fallback: string): string {
   try {
@@ -62,9 +63,13 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           navigateFallback: '/index.html',
+          navigateFallbackDenylist: PWA_NAVIGATE_FALLBACK_DENYLIST,
           runtimeCaching: [
             {
-              urlPattern: ({ url }) => url.pathname.startsWith('/api'),
+              urlPattern: ({ url }) =>
+                url.pathname.startsWith('/api') ||
+                url.pathname.startsWith('/auth') ||
+                url.pathname.startsWith('/sanctum'),
               handler: 'NetworkOnly',
             },
           ],
