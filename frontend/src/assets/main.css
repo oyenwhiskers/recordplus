@@ -1,0 +1,346 @@
+@import 'tailwindcss';
+@import 'sweetalert2/dist/sweetalert2.min.css';
+
+@theme {
+  --color-primary: #2d6bff;
+  --color-background: #f8f9fb;
+  --color-soft-blue: #e8f1ff;
+  --font-sans: Inter, system-ui, sans-serif;
+}
+
+/* RecordPlus SweetAlert2 theme */
+.rp-swal-popup {
+  border-radius: 1rem !important;
+  border: 1px solid #f3f4f6 !important;
+  box-shadow: 0 20px 40px rgba(17, 24, 39, 0.08) !important;
+  font-family: Inter, system-ui, sans-serif !important;
+  padding: 1.5rem !important;
+  width: min(26rem, calc(100vw - 2rem)) !important;
+}
+
+.rp-swal-title {
+  color: #111827 !important;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+.rp-swal-html {
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+  margin: 0.5rem 0 0 !important;
+}
+
+.rp-swal-icon {
+  margin: 0.25rem auto 0.75rem !important;
+}
+
+.rp-swal-icon.swal2-warning {
+  border-color: #fbbf24 !important;
+  color: #d97706 !important;
+}
+
+.rp-swal-icon-success.swal2-success {
+  border-color: #6ee7b7 !important;
+  color: #059669 !important;
+}
+
+.rp-swal-icon-error.swal2-error {
+  border-color: #fca5a5 !important;
+  color: #dc2626 !important;
+}
+
+.rp-swal-actions {
+  margin-top: 1.25rem !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+}
+
+.rp-swal-confirm,
+.rp-swal-cancel {
+  border-radius: 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  min-height: 2.5rem !important;
+  padding: 0.625rem 1rem !important;
+  flex: 1 1 0 !important;
+}
+
+.rp-swal-confirm {
+  background: #2d6bff !important;
+  color: #fff !important;
+}
+
+.rp-swal-confirm:hover {
+  background: #2563eb !important;
+}
+
+.rp-swal-confirm-danger {
+  background: #dc2626 !important;
+}
+
+.rp-swal-confirm-danger:hover {
+  background: #b91c1c !important;
+}
+
+.rp-swal-cancel {
+  background: #fff !important;
+  border: 1px solid #e5e7eb !important;
+  color: #374151 !important;
+}
+
+.rp-swal-cancel:hover {
+  background: #f8f9fb !important;
+}
+
+.rp-swal-toast {
+  border-radius: 0.75rem !important;
+  border: 1px solid #f3f4f6 !important;
+  box-shadow: 0 12px 28px rgba(17, 24, 39, 0.1) !important;
+  font-family: Inter, system-ui, sans-serif !important;
+  padding: 0.85rem 1rem !important;
+}
+
+.rp-swal-toast-title {
+  color: #111827 !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.rp-swal-toast-icon {
+  margin: 0 0.5rem 0 0 !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-width: 0.15em !important;
+}
+
+.rp-swal-field {
+  display: block;
+  margin-top: 0.75rem;
+  text-align: left;
+}
+
+.rp-swal-field > span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #6b7280;
+  font-size: 0.8125rem;
+}
+
+.rp-swal-input,
+.swal2-input.rp-swal-input,
+.swal2-file.rp-swal-input,
+.swal2-textarea.rp-swal-input {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 1rem 0 0 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  padding: 0.625rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
+  outline: none !important;
+  transition: border-color 0.15s ease !important;
+}
+
+.rp-swal-input:focus,
+.swal2-input.rp-swal-input:focus,
+.swal2-file.rp-swal-input:focus,
+.swal2-textarea.rp-swal-input:focus {
+  border-color: #2d6bff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.swal2-popup .swal2-input:not([type='checkbox']):not([type='radio']) {
+  /* keep native Swal inputs aligned with full-width actions when rp-swal-input is applied */
+  display: block;
+}
+
+.rp-token-detail {
+  text-align: left;
+  margin-top: 0.75rem;
+}
+
+.rp-token-detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.rp-token-detail-row strong {
+  color: #111827;
+  font-variant-numeric: tabular-nums;
+}
+
+.rp-token-detail-note {
+  margin: 0.75rem 0 0;
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+/* Mobile: keep touch scroll, hide the bar */
+@media (max-width: 767px) {
+  .overflow-y-auto,
+  .overflow-auto {
+    scrollbar-width: none;
+  }
+
+  .overflow-y-auto::-webkit-scrollbar,
+  .overflow-auto::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+}
+
+/* Native select: inset chevron so it isn't flush with the border */
+select.rp-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19 9-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem 1rem;
+}
+
+/* PWA notch / home indicator */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Guest landing — mirrors website/ hero */
+.hero-section {
+  min-height: calc(100dvh - 4.5rem);
+  background-color: #f8f9fb;
+  background-image: url('/landing/hero/mobile_recordplus_hero_section.png');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2.5rem;
+  padding-bottom: min(42%, 11rem);
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hero-copy-actions {
+  margin-top: 0.25rem;
+}
+
+.hero-cta-primary {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-section-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    #f8f9fb 0%,
+    #f8f9fb 38%,
+    rgba(248, 249, 251, 0.97) 48%,
+    rgba(248, 249, 251, 0.75) 54%,
+    rgba(248, 249, 251, 0.2) 62%,
+    transparent 72%
+  );
+}
+
+.hero-feature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    display: block;
+    min-height: 34rem;
+    background-image: url('/landing/hero/recordplus_hero_section.png');
+    background-position: right center;
+    background-size: cover;
+  }
+
+  .hero-content {
+    display: block;
+    flex: none;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .hero-copy {
+    display: block;
+    gap: 0;
+  }
+
+  .hero-copy-actions {
+    margin-top: 0;
+  }
+
+  .hero-cta-primary {
+    margin-left: 0;
+    margin-right: 0;
+    width: auto;
+    max-width: none;
+  }
+
+  .hero-section-overlay {
+    background: linear-gradient(
+      to right,
+      #f8f9fb 0%,
+      #f8f9fb 28%,
+      rgba(248, 249, 251, 0.92) 42%,
+      rgba(248, 249, 251, 0.55) 58%,
+      transparent 75%
+    );
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-section {
+    min-height: 38rem;
+  }
+}

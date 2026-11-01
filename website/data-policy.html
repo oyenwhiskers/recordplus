@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Policy — RecordPlus</title>
+    <meta name="description" content="How RecordPlus stores and manages your data." />
+    <meta property="og:title" content="Data Policy — RecordPlus" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/images/og-image.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="assets/images/recordplus_logo_app.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/images/recordplus_logo_app.png" />
+  </head>
+  <body class="bg-background font-sans text-gray-900 antialiased">
+    <header class="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <a href="index.html" class="flex items-center gap-3">
+          <img
+            src="assets/images/recordplus_logo_app.png"
+            alt=""
+            class="h-10 w-10 rounded-xl"
+            width="40"
+            height="40"
+            aria-hidden="true"
+          />
+          <span class="text-xl font-bold text-gray-900">Record<span class="text-primary">Plus</span></span>
+        </a>
+
+        <nav class="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+          <a href="index.html#features" class="text-sm font-medium text-gray-600 hover:text-primary">Features</a>
+          <a href="index.html#export" class="text-sm font-medium text-gray-600 hover:text-primary">Export</a>
+          <a href="index.html#how-it-works" class="text-sm font-medium text-gray-600 hover:text-primary">How it works</a>
+          <a href="index.html#faq" class="text-sm font-medium text-gray-600 hover:text-primary">FAQ</a>
+          <a
+            href="index.html#download"
+            class="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600"
+          >
+            Get the app
+          </a>
+        </nav>
+
+        <button
+          id="menu-button"
+          type="button"
+          class="inline-flex items-center justify-center rounded-lg border border-gray-200 p-2 text-gray-700 md:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Open menu"
+        >
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="hidden border-t border-gray-100 bg-white md:hidden">
+        <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4" aria-label="Mobile navigation">
+          <a href="index.html#features" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">Features</a>
+          <a href="index.html#export" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">Export</a>
+          <a href="index.html#how-it-works" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">How it works</a>
+          <a href="index.html#faq" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">FAQ</a>
+          <a href="index.html#download" class="mt-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-white">Get the app</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="px-4 py-12 md:py-16">
+      <article class="mx-auto max-w-3xl">
+        <a href="index.html" class="text-sm font-medium text-primary hover:underline">← Back to home</a>
+        <h1 class="mt-6 text-3xl font-bold text-gray-900 md:text-4xl">Data Policy</h1>
+        <p class="mt-2 text-sm text-gray-500">Last updated: May 27, 2026</p>
+        <div class="prose-policy mt-8 space-y-6 text-base leading-relaxed text-gray-600">
+          <p>
+            RecordPlus stores document metadata such as date, name, category, amount, currency, notes, and file
+            references to support sorting and retrieval.
+          </p>
+          <p>
+            App preferences such as selected profile, language, and theme are persisted locally so your settings remain
+            after restart.
+          </p>
+          <p>
+            Data retention is controlled by you. Records stay available until you delete them. There is no cloud
+            retention managed by RecordPlus in this phase.
+          </p>
+          <p>
+            When exporting, the app generates package files for sharing. Deleting an export file does not remove the
+            original in-app record.
+          </p>
+        </div>
+      </article>
+    </main>
+
+    <footer class="border-t border-gray-100 bg-white px-4 py-12">
+      <div class="mx-auto max-w-6xl">
+        <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          <div>
+            <a href="index.html" class="flex items-center gap-3">
+              <img
+                src="assets/images/recordplus_logo_app.png"
+                alt=""
+                class="h-10 w-10 rounded-xl"
+                width="40"
+                height="40"
+                aria-hidden="true"
+              />
+              <span class="text-xl font-bold text-gray-900">Record<span class="text-primary">Plus</span></span>
+            </a>
+            <p class="mt-3 max-w-sm text-sm text-gray-600">
+              RecordPlus helps you keep every important record organized, searchable, and ready to share.
+            </p>
+          </div>
+          <div class="flex gap-12">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900">Product</h3>
+              <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                <li><a href="index.html#features" class="hover:text-primary">Features</a></li>
+                <li><a href="index.html#export" class="hover:text-primary">Export</a></li>
+                <li><a href="index.html#how-it-works" class="hover:text-primary">How it works</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900">Legal</h3>
+              <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                <li><a href="privacy.html" class="hover:text-primary">Privacy Policy</a></li>
+                <li><a href="data-policy.html" class="hover:text-primary">Data Policy</a></li>
+                <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <p class="mt-10 border-t border-gray-100 pt-8 text-center text-sm text-gray-500">
+          &copy; 2026 RecordPlus. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

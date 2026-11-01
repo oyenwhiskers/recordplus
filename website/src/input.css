@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Mobile: full-bleed background, copy + CTAs above bottom phones */
+  .hero-section {
+    min-height: calc(100dvh - 4.5rem);
+    background-color: #f8f9fb;
+    background-image: url("../assets/images/hero/mobile_recordplus_hero_section.png");
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 2.5rem;
+    padding-bottom: min(42%, 11rem);
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-copy-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.25rem;
+  }
+
+  .hero-cta-primary {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-section-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      #f8f9fb 0%,
+      #f8f9fb 38%,
+      rgba(248, 249, 251, 0.97) 48%,
+      rgba(248, 249, 251, 0.75) 54%,
+      rgba(248, 249, 251, 0.2) 62%,
+      transparent 72%
+    );
+  }
+
+  @media (min-width: 768px) {
+    .hero-section {
+      display: block;
+      min-height: 34rem;
+      background-image: url("../assets/images/hero/recordplus_hero_section.png");
+      background-position: right center;
+      background-size: cover;
+    }
+
+    .hero-content {
+      display: block;
+      flex: none;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .hero-copy {
+      display: block;
+      gap: 0;
+    }
+
+    .hero-copy-actions {
+      display: block;
+      margin-top: 0;
+    }
+
+    .hero-cta-primary {
+      margin-left: 0;
+      margin-right: 0;
+      width: auto;
+      max-width: none;
+    }
+
+    .hero-section-overlay {
+      background: linear-gradient(
+        to right,
+        #f8f9fb 0%,
+        #f8f9fb 28%,
+        rgba(248, 249, 251, 0.92) 42%,
+        rgba(248, 249, 251, 0.55) 58%,
+        transparent 75%
+      );
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-section {
+      min-height: 38rem;
+    }
+  }
+
+  .hero-feature-tag {
+    @apply inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm;
+  }
+}

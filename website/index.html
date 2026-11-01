@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RecordPlus — Capture, Organize &amp; Export Documents</title>
+    <meta
+      name="description"
+      content="RecordPlus helps you keep every important record organized, searchable, and ready to share."
+    />
+    <meta property="og:title" content="RecordPlus — Capture, Organize &amp; Export Documents" />
+    <meta
+      property="og:description"
+      content="RecordPlus helps you keep every important record organized, searchable, and ready to share."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/images/og-image.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="assets/images/recordplus_logo_app.png" type="image/png" />
+    <link rel="apple-touch-icon" href="assets/images/recordplus_logo_app.png" />
+  </head>
+  <body class="bg-background font-sans text-gray-900 antialiased">
+    <header class="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <a href="index.html" class="flex items-center gap-3">
+          <img
+            src="assets/images/recordplus_logo_app.png"
+            alt=""
+            class="h-10 w-10 rounded-xl"
+            width="40"
+            height="40"
+            aria-hidden="true"
+          />
+          <span class="text-xl font-bold text-gray-900">Record<span class="text-primary">Plus</span></span>
+        </a>
+
+        <nav class="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+          <a href="#features" class="text-sm font-medium text-gray-600 hover:text-primary">Features</a>
+          <a href="#export" class="text-sm font-medium text-gray-600 hover:text-primary">Export</a>
+          <a href="#how-it-works" class="text-sm font-medium text-gray-600 hover:text-primary">How it works</a>
+          <a href="#faq" class="text-sm font-medium text-gray-600 hover:text-primary">FAQ</a>
+          <a
+            href="#download"
+            class="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600"
+          >
+            Get the app
+          </a>
+        </nav>
+
+        <button
+          id="menu-button"
+          type="button"
+          class="inline-flex items-center justify-center rounded-lg border border-gray-200 p-2 text-gray-700 md:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Open menu"
+        >
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="hidden border-t border-gray-100 bg-white md:hidden">
+        <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4" aria-label="Mobile navigation">
+          <a href="#features" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">Features</a>
+          <a href="#export" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">Export</a>
+          <a href="#how-it-works" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">How it works</a>
+          <a href="#faq" class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-soft-blue">FAQ</a>
+          <a href="#download" class="mt-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-white">Get the app</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section
+        class="hero-section relative overflow-hidden px-4 md:py-16 lg:py-20"
+        aria-label="RecordPlus app on iPhone showing capture, organize, and record screens"
+      >
+        <div class="hero-section-overlay" aria-hidden="true"></div>
+        <div class="hero-content relative z-10 mx-auto w-full max-w-6xl">
+          <div class="hero-copy mx-auto max-w-xl text-center md:mx-0 md:text-left">
+            <h1 class="text-4xl font-bold leading-tight tracking-tight text-gray-900 md:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
+              Keep Every Important Record in <span class="text-primary underline decoration-primary decoration-2 underline-offset-4 md:no-underline">One Place</span>
+            </h1>
+            <p class="text-base leading-relaxed text-gray-600 md:mt-5 md:text-lg">
+              Capture, organize, and export documents in one secure local-first app.
+            </p>
+
+            <div class="flex flex-wrap justify-center gap-3 md:mt-6 md:justify-start">
+              <span class="hero-feature-tag">
+                <svg class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Capture
+              </span>
+              <span class="hero-feature-tag">
+                <svg class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                Organize
+              </span>
+              <span class="hero-feature-tag">
+                <svg class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 8l-4-4-4 4M12 4v12" />
+                </svg>
+                Export
+              </span>
+            </div>
+
+            <div class="hero-copy-actions md:mt-8">
+              <a
+                href="#download"
+                class="hero-cta-primary inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 md:max-w-none md:py-3.5"
+              >
+                Get Started
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+
+            <ul class="mt-6 hidden space-y-3 text-sm text-gray-600 md:block">
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Your data stays local and secure
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Private by design. You're in control.
+              </li>
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Fast, simple, and built for daily use.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Problem / Solution -->
+      <section class="border-y border-gray-100 bg-white px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-6xl">
+          <div class="grid gap-10 md:grid-cols-2 md:items-stretch">
+            <div class="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-background">
+              <img
+                src="assets/images/the_problem_image.png"
+                alt="Scattered receipts and documents across folders, chats, and camera rolls"
+                class="aspect-[4/3] w-full shrink-0 object-cover"
+                width="640"
+                height="480"
+                loading="lazy"
+              />
+              <div class="flex flex-1 flex-col p-8">
+                <h2 class="text-2xl font-bold text-gray-900">The problem</h2>
+                <p class="mt-4 leading-relaxed text-gray-600">
+                  Receipts, invoices, and paperwork end up scattered across folders, chats, and camera rolls. When you need
+                  to review a month or share records, everything feels messy and slow.
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-col overflow-hidden rounded-2xl border border-primary/20 bg-soft-blue">
+              <img
+                src="assets/images/the_solution_image.png"
+                alt="RecordPlus app organizing documents by category and month"
+                class="aspect-[4/3] w-full shrink-0 object-cover"
+                width="640"
+                height="480"
+                loading="lazy"
+              />
+              <div class="flex flex-1 flex-col p-8">
+                <h2 class="text-2xl font-bold text-gray-900">The solution</h2>
+                <p class="mt-4 leading-relaxed text-gray-600">
+                  RecordPlus gives you a lightweight workflow: capture documents quickly, add structured details, organize
+                  by category and month, then export professional reports when needed — without complex accounting software.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature pillars -->
+      <section id="features" class="px-4 py-16 md:py-24">
+        <div class="mx-auto max-w-6xl">
+          <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Built for daily document operations</h2>
+            <p class="mt-4 text-lg text-gray-600">
+              Capture, organize, and export — three pillars that keep your records under control.
+            </p>
+          </div>
+          <div class="mt-12 grid gap-6 md:grid-cols-3">
+            <article class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+              <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-soft-blue text-primary">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900">Capture</h3>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                From camera, gallery, or PDF—save documents quickly with structured details.
+              </p>
+            </article>
+            <article class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+              <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-soft-blue text-primary">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900">Organize</h3>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                Use profiles, categories, and monthly snapshots to find any record in seconds.
+              </p>
+            </article>
+            <article class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+              <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-soft-blue text-primary">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M16 8l-4-4-4 4" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900">Export</h3>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                Generate polished financial statements and document registers ready for sharing and review.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Export showcase -->
+      <section id="export" class="bg-white px-4 py-16 md:py-24">
+        <div class="mx-auto max-w-6xl">
+          <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Professional export reports</h2>
+            <p class="mt-4 text-lg text-gray-600">
+              Turn organized records into polished PDFs ready for review, sharing, and audit traceability.
+            </p>
+          </div>
+          <div class="mt-12 grid gap-8 lg:grid-cols-2">
+            <article class="overflow-hidden rounded-2xl border border-gray-100 bg-background shadow-sm">
+              <img
+                src="assets/images/document_register_image.png"
+                alt="Document Register export preview"
+                class="aspect-[4/3] w-full border-b border-gray-100 object-cover"
+                width="480"
+                height="360"
+                loading="lazy"
+              />
+              <div class="p-8">
+                <h3 class="text-xl font-semibold text-gray-900">RecordPlus Document Register</h3>
+                <p class="mt-2 text-gray-600">Best for document traceability and audit-ready review.</p>
+                <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                  <li class="flex gap-2"><span class="text-primary">•</span> Summary page</li>
+                  <li class="flex gap-2"><span class="text-primary">•</span> Document index table</li>
+                  <li class="flex gap-2"><span class="text-primary">•</span> Visual pages by selected layout mode</li>
+                </ul>
+              </div>
+            </article>
+            <article class="overflow-hidden rounded-2xl border border-gray-100 bg-background shadow-sm">
+              <img
+                src="assets/images/financial_statement_image.png"
+                alt="Financial Statement export preview"
+                class="aspect-[4/3] w-full border-b border-gray-100 object-cover"
+                width="480"
+                height="360"
+                loading="lazy"
+              />
+              <div class="p-8">
+                <h3 class="text-xl font-semibold text-gray-900">Financial Statement</h3>
+                <p class="mt-2 text-gray-600">Best for amount-based records and summary review.</p>
+                <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                  <li class="flex gap-2"><span class="text-primary">•</span> Statement header metadata</li>
+                  <li class="flex gap-2"><span class="text-primary">•</span> Tabular entries (date, name, category, ref, amount)</li>
+                  <li class="flex gap-2"><span class="text-primary">•</span> Grand total row</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section id="how-it-works" class="px-4 py-16 md:py-24">
+        <div class="mx-auto max-w-6xl">
+          <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">How it works</h2>
+            <p class="mt-4 text-lg text-gray-600">A simple four-step workflow from capture to export.</p>
+          </div>
+          <ol class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">1</span>
+              <h3 class="mt-4 font-semibold text-gray-900">Scan or upload</h3>
+              <p class="mt-2 text-sm leading-relaxed text-gray-600">Capture via camera, pick from gallery, or upload a PDF document.</p>
+            </li>
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">2</span>
+              <h3 class="mt-4 font-semibold text-gray-900">Add details</h3>
+              <p class="mt-2 text-sm leading-relaxed text-gray-600">Enter name, category, date, and optional amount, currency, and notes.</p>
+            </li>
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">3</span>
+              <h3 class="mt-4 font-semibold text-gray-900">Browse by month</h3>
+              <p class="mt-2 text-sm leading-relaxed text-gray-600">Use profiles, categories, and monthly snapshots to find records fast.</p>
+            </li>
+            <li class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">4</span>
+              <h3 class="mt-4 font-semibold text-gray-900">Export &amp; share</h3>
+              <p class="mt-2 text-sm leading-relaxed text-gray-600">Generate ZIP packages, financial statements, or document registers.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Trust / Privacy -->
+      <section class="bg-soft-blue px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-6xl">
+          <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h2 class="text-3xl font-bold text-gray-900">Your data stays under your control</h2>
+              <p class="mt-4 text-lg leading-relaxed text-gray-600">
+                RecordPlus is built local-first. Your documents live on your device — sharing only happens when you choose to export.
+              </p>
+              <a href="privacy.html" class="mt-6 inline-flex text-sm font-semibold text-primary hover:underline">
+                Read our Privacy Policy →
+              </a>
+            </div>
+            <ul class="space-y-4">
+              <li class="flex gap-3 rounded-xl bg-white/70 p-4">
+                <span class="mt-1 text-primary">✓</span>
+                <span class="text-gray-700">Local-first storage design — data stored on-device</span>
+              </li>
+              <li class="flex gap-3 rounded-xl bg-white/70 p-4">
+                <span class="mt-1 text-primary">✓</span>
+                <span class="text-gray-700">User-controlled export and sharing</span>
+              </li>
+              <li class="flex gap-3 rounded-xl bg-white/70 p-4">
+                <span class="mt-1 text-primary">✓</span>
+                <span class="text-gray-700">Profile-scoped records and views</span>
+              </li>
+              <li class="flex gap-3 rounded-xl bg-white/70 p-4">
+                <span class="mt-1 text-primary">✓</span>
+                <span class="text-gray-700">No forced cloud dependency in the core flow</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="px-4 py-16 md:py-24">
+        <div class="mx-auto max-w-3xl">
+          <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900 md:text-4xl">Frequently asked questions</h2>
+          </div>
+          <div class="mt-10 divide-y divide-gray-200">
+            <details class="group py-5">
+              <summary class="cursor-pointer list-none text-lg font-medium text-gray-900 marker:content-none">
+                Is RecordPlus accounting software?
+              </summary>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                No. RecordPlus is a lightweight document management app for capture, organization, and export. It is not
+                a full accounting or bookkeeping system.
+              </p>
+            </details>
+            <details class="group py-5">
+              <summary class="cursor-pointer list-none text-lg font-medium text-gray-900 marker:content-none">
+                Where is my data stored?
+              </summary>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                On your device. RecordPlus uses local-first storage and does not automatically upload your documents to
+                external servers.
+              </p>
+            </details>
+            <details class="group py-5">
+              <summary class="cursor-pointer list-none text-lg font-medium text-gray-900 marker:content-none">
+                Which languages are supported?
+              </summary>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                RecordPlus supports English, Malay, Chinese, and Indonesian, with light and dark theme options.
+              </p>
+            </details>
+            <details class="group py-5">
+              <summary class="cursor-pointer list-none text-lg font-medium text-gray-900 marker:content-none">
+                Which platforms are supported?
+              </summary>
+              <p class="mt-3 leading-relaxed text-gray-600">
+                RecordPlus is a mobile app designed for iOS and Android. Store links will be available here when the app launches.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section id="download" class="bg-gray-900 px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <h2 class="text-3xl font-bold text-white md:text-4xl">Organize your records today</h2>
+          <p class="mt-4 text-lg text-gray-300">
+            Download RecordPlus and start capturing, organizing, and exporting documents with confidence.
+          </p>
+          <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <span
+              class="inline-flex min-w-[200px] cursor-default flex-col items-center justify-center rounded-xl bg-white/90 px-6 py-3"
+              aria-disabled="true"
+            >
+              <span class="text-sm font-semibold text-gray-900">App Store</span>
+              <span class="mt-0.5 text-xs font-medium text-gray-500">Coming soon</span>
+            </span>
+            <a
+              href="#"
+              class="inline-flex min-w-[200px] items-center justify-center rounded-xl border border-gray-600 px-6 py-3 text-sm font-semibold text-white hover:border-gray-400"
+            >
+              Google Play
+            </a>
+          </div>
+          <p class="mt-4 text-sm text-gray-400">App Store coming soon. Google Play link is a placeholder until launch.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-gray-100 bg-white px-4 py-12">
+      <div class="mx-auto max-w-6xl">
+        <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          <div>
+            <a href="index.html" class="flex items-center gap-3">
+              <img
+                src="assets/images/recordplus_logo_app.png"
+                alt=""
+                class="h-10 w-10 rounded-xl"
+                width="40"
+                height="40"
+                aria-hidden="true"
+              />
+              <span class="text-xl font-bold text-gray-900">Record<span class="text-primary">Plus</span></span>
+            </a>
+            <p class="mt-3 max-w-sm text-sm text-gray-600">
+              RecordPlus helps you keep every important record organized, searchable, and ready to share.
+            </p>
+          </div>
+          <div class="flex gap-12">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900">Product</h3>
+              <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                <li><a href="#features" class="hover:text-primary">Features</a></li>
+                <li><a href="#export" class="hover:text-primary">Export</a></li>
+                <li><a href="#how-it-works" class="hover:text-primary">How it works</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900">Legal</h3>
+              <ul class="mt-3 space-y-2 text-sm text-gray-600">
+                <li><a href="privacy.html" class="hover:text-primary">Privacy Policy</a></li>
+                <li><a href="data-policy.html" class="hover:text-primary">Data Policy</a></li>
+                <li><a href="contact.html" class="hover:text-primary">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <p class="mt-10 border-t border-gray-100 pt-8 text-center text-sm text-gray-500">
+          &copy; 2026 RecordPlus. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
