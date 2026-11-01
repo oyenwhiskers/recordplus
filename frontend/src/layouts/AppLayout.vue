@@ -91,7 +91,7 @@ const profileLabel = computed(() => auth.activeProfile?.name ?? t('label_no_prof
 </script>
 
 <template>
-  <div class="flex h-dvh flex-col overflow-hidden bg-background pt-[env(safe-area-inset-top)]">
+  <div class="flex h-svh max-h-svh flex-col overflow-hidden bg-background pt-[var(--rp-sat)]">
     <OfflineBanner class="shrink-0" />
     <header class="z-30 hidden shrink-0 border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 md:block">
       <div class="mx-auto flex h-14 w-full max-w-[1800px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
@@ -212,7 +212,7 @@ const profileLabel = computed(() => auth.activeProfile?.name ?? t('label_no_prof
     </main>
 
     <nav
-      class="z-30 shrink-0 border-t border-gray-100 bg-white pb-[max(0.375rem,env(safe-area-inset-bottom))] md:hidden"
+      class="z-30 shrink-0 border-t border-gray-100 bg-white pb-[max(0.375rem,var(--rp-sab))] md:hidden"
       :aria-label="t('nav_primary')"
     >      <div class="mx-auto grid max-w-lg grid-cols-5 gap-0.5 px-1 py-1.5">
         <RouterLink

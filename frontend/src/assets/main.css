@@ -189,11 +189,36 @@
   font-size: 0.75rem;
 }
 
+:root {
+  --rp-sat: env(safe-area-inset-top, 0px);
+  --rp-sab: env(safe-area-inset-bottom, 0px);
+  --rp-sal: env(safe-area-inset-left, 0px);
+  --rp-sar: env(safe-area-inset-right, 0px);
+}
+
+/* Installed app: Android 3-button nav often reports inset 0 while still covering content */
+@media (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
+  :root {
+    --rp-sab: max(48px, env(safe-area-inset-bottom, 0px));
+  }
+
+  html {
+    height: 100%;
+    height: 100svh;
+  }
+}
+
+html.rp-pwa {
+  height: 100%;
+  height: 100svh;
+  --rp-sab: max(48px, env(safe-area-inset-bottom, 0px));
+}
+
 html,
 body,
 #app {
   min-height: 100%;
-  min-height: 100dvh;
+  min-height: 100svh;
 }
 
 /* Mobile: keep touch scroll, hide the bar */
@@ -212,6 +237,8 @@ body,
 body {
   font-family: var(--font-sans);
   background-color: var(--color-background);
+  padding-left: var(--rp-sal);
+  padding-right: var(--rp-sar);
 }
 
 /* Native select: inset chevron so it isn't flush with the border */
@@ -221,14 +248,6 @@ select.rp-select {
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1rem 1rem;
-}
-
-/* PWA notch / home indicator (needs viewport-fit=cover) */
-@supports (padding: env(safe-area-inset-top)) {
-  body {
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
 }
 
 /* Guest landing — mirrors website/ hero */

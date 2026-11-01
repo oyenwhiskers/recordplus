@@ -86,6 +86,13 @@ function onAppInstalled(): void {
   installedFlag.value = true
 }
 
+function markStandaloneDocument(): void {
+  if (typeof document === 'undefined') {
+    return
+  }
+  document.documentElement.classList.add('rp-pwa')
+}
+
 export function setupPwaInstallListeners(): void {
   if (typeof window === 'undefined' || listenersBound) {
     return
@@ -94,6 +101,7 @@ export function setupPwaInstallListeners(): void {
 
   if (isStandalone()) {
     installedFlag.value = true
+    markStandaloneDocument()
     return
   }
 

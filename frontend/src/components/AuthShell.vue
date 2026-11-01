@@ -14,13 +14,14 @@ withDefaults(
 </script>
 
 <template>
-  <div class="flex h-dvh flex-col overflow-hidden bg-background font-sans text-gray-900 antialiased">
+  <!-- svh = visible area in installed PWA; flex-1 art was blowing past Android nav -->
+  <div class="flex h-svh max-h-svh flex-col overflow-hidden bg-background font-sans text-gray-900 antialiased">
     <div
       class="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_45%_at_50%_0%,rgba(45,107,255,0.1),transparent_50%),radial-gradient(ellipse_55%_35%_at_100%_100%,rgba(232,241,255,0.85),transparent_45%)] lg:hidden"
       aria-hidden="true"
     />
 
-    <header class="relative z-20 shrink-0 px-4 pb-0.5 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6 sm:pt-[max(1.25rem,env(safe-area-inset-top))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pt-7">
+    <header class="relative z-20 shrink-0 px-4 pb-0.5 pt-[max(0.75rem,var(--rp-sat))] sm:px-6 sm:pt-[max(1.25rem,var(--rp-sat))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pt-7">
       <RouterLink to="/" class="inline-flex items-center gap-2">
         <img
           src="/recordplus_logo_app.png"
@@ -39,24 +40,24 @@ withDefaults(
         class="flex min-h-0 w-full flex-1 flex-col"
         :class="showMedia ? 'lg:grid lg:grid-cols-2' : ''"
       >
-        <!-- Form fills viewport: illustration only uses leftover height -->
         <section
-          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-[max(3rem,calc(env(safe-area-inset-bottom,0px)+0.75rem))] pt-0.5 sm:px-6 lg:overflow-y-visible lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
+          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-[max(0.75rem,var(--rp-sab))] pt-0.5 sm:px-6 lg:overflow-y-visible lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
         >
-          <div class="mx-auto flex min-h-full w-full max-w-[22rem] flex-1 flex-col lg:max-w-[26rem] lg:min-h-0 lg:flex-none lg:justify-center">
+          <div class="mx-auto flex min-h-full w-full max-w-[22rem] flex-col justify-center lg:max-w-[26rem] lg:min-h-0">
+            <!-- Fixed tiny art only; hide on short phones so form always fits -->
             <div
               v-if="showMedia"
-              class="mb-1 flex min-h-0 flex-1 basis-0 items-center justify-center lg:hidden"
+              class="mx-auto mb-2 flex h-[5.5rem] w-full max-w-[11rem] shrink-0 items-center justify-center overflow-hidden lg:hidden [@media(max-height:740px)]:hidden"
             >
-              <div class="relative flex h-full max-h-full w-full max-w-[16rem] items-center justify-center">
+              <div class="relative flex h-full w-full items-center justify-center">
                 <div
-                  class="absolute inset-[8%] rounded-full bg-soft-blue/90 blur-2xl"
+                  class="absolute inset-[10%] rounded-full bg-soft-blue/90 blur-2xl"
                   aria-hidden="true"
                 />
                 <img
                   :src="mediaSrc"
                   alt=""
-                  class="relative z-10 h-full w-auto max-h-full object-contain"
+                  class="relative z-10 h-full w-full object-contain"
                   width="640"
                   height="640"
                   decoding="async"
@@ -79,7 +80,6 @@ withDefaults(
           </div>
         </section>
 
-        <!-- Desktop sprite panel -->
         <aside
           v-if="showMedia"
           class="relative hidden overflow-hidden lg:flex lg:items-center lg:justify-center"
@@ -105,7 +105,7 @@ withDefaults(
             <img
               :src="mediaSrc"
               alt=""
-              class="h-auto w-[min(100%,42rem)] max-h-[min(88dvh,46rem)] object-contain drop-shadow-md"
+              class="h-auto w-[min(100%,42rem)] max-h-[min(88svh,46rem)] object-contain drop-shadow-md"
               width="900"
               height="900"
               decoding="async"

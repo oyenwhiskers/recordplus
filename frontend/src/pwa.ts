@@ -23,12 +23,16 @@ async function destroyLocalServiceWorker(): Promise<void> {
 }
 
 export async function setupPwa(): Promise<void> {
+  const { isStandalone, setupPwaInstallListeners } = await import('@/lib/pwaInstall')
+  if (isStandalone()) {
+    document.documentElement.classList.add('rp-pwa')
+  }
+
   if (isLocalDevHost()) {
     await destroyLocalServiceWorker()
     return
   }
 
-  const { setupPwaInstallListeners } = await import('@/lib/pwaInstall')
   setupPwaInstallListeners()
 
   const { registerSW } = await import('virtual:pwa-register')
