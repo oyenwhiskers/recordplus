@@ -5,10 +5,13 @@ withDefaults(
     subtitle: string
     showMedia?: boolean
     mediaSrc?: string
+    /** Smaller sprite so denser pages (signup) can still vertical-center */
+    mediaCompact?: boolean
   }>(),
   {
     showMedia: false,
     mediaSrc: '/landing/auth-illustration.png',
+    mediaCompact: false,
   },
 )
 </script>
@@ -21,7 +24,7 @@ withDefaults(
       aria-hidden="true"
     />
 
-    <header class="relative z-20 shrink-0 px-4 pb-0.5 pt-[max(0.75rem,var(--rp-sat))] sm:px-6 sm:pt-[max(1.25rem,var(--rp-sat))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pt-7">
+    <header class="relative z-20 shrink-0 px-5 pb-2 pt-[max(1rem,calc(var(--rp-sat)+0.35rem))] sm:px-6 sm:pt-[max(1.25rem,calc(var(--rp-sat)+0.5rem))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pb-0 lg:pt-7">
       <RouterLink to="/" class="inline-flex items-center gap-2">
         <img
           src="/recordplus_logo_app.png"
@@ -41,41 +44,58 @@ withDefaults(
         :class="showMedia ? 'lg:grid lg:grid-cols-2' : ''"
       >
         <section
-          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-[max(0.75rem,var(--rp-sab))] pt-0.5 sm:px-6 lg:overflow-y-visible lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
+          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-5 pb-[max(1.5rem,calc(var(--rp-sab)+0.75rem))] pt-0 sm:px-6 lg:overflow-y-visible lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
         >
-          <div class="mx-auto flex min-h-full w-full max-w-[22rem] flex-col justify-center lg:max-w-[26rem] lg:min-h-0">
-            <!-- Fixed tiny art only; hide on short phones so form always fits -->
-            <div
-              v-if="showMedia"
-              class="mx-auto mb-2 flex h-[5.5rem] w-full max-w-[11rem] shrink-0 items-center justify-center overflow-hidden lg:hidden [@media(max-height:740px)]:hidden"
-            >
-              <div class="relative flex h-full w-full items-center justify-center">
-                <div
-                  class="absolute inset-[10%] rounded-full bg-soft-blue/90 blur-2xl"
-                  aria-hidden="true"
-                />
-                <img
-                  :src="mediaSrc"
-                  alt=""
-                  class="relative z-10 h-full w-full object-contain"
-                  width="640"
-                  height="640"
-                  decoding="async"
-                />
+          <!-- min-h-full + justify-center: centers when short, scrolls from top when tall -->
+          <div
+            class="flex min-h-full w-full flex-col justify-center lg:min-h-0 lg:py-0"
+            :class="mediaCompact ? 'py-0' : 'py-2'"
+          >
+            <div class="mx-auto flex w-full max-w-[22rem] flex-col lg:max-w-[26rem]">
+              <div
+                v-if="showMedia"
+                class="mx-auto flex max-w-full shrink-0 items-center justify-center overflow-hidden lg:hidden"
+                :class="
+                  mediaCompact
+                    ? 'mb-1 size-[min(38svh,16.5rem)]'
+                    : 'mb-2 size-[min(52svh,21.5rem)]'
+                "
+              >
+                <div class="relative flex size-full items-center justify-center overflow-hidden">
+                  <div
+                    class="absolute inset-[8%] rounded-full bg-soft-blue/90 blur-2xl"
+                    aria-hidden="true"
+                  />
+                  <img
+                    :src="mediaSrc"
+                    alt=""
+                    class="relative z-10 size-full object-contain"
+                    :class="mediaCompact ? 'origin-bottom scale-110 object-[center_42%]' : ''"
+                    width="640"
+                    height="640"
+                    decoding="async"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div class="shrink-0 text-center lg:text-left">
-              <h1 class="text-xl font-bold leading-tight tracking-tight text-primary sm:text-[1.75rem]">
-                {{ title }}
-              </h1>
-              <p class="mt-1 text-sm leading-snug text-gray-500">
-                {{ subtitle }}
-              </p>
-            </div>
+              <div class="shrink-0 text-center lg:text-left">
+                <h1
+                  class="font-bold leading-tight tracking-tight text-primary"
+                  :class="mediaCompact ? 'text-lg sm:text-[1.75rem]' : 'text-xl sm:text-[1.75rem]'"
+                >
+                  {{ title }}
+                </h1>
+                <p
+                  class="leading-snug text-gray-500"
+                  :class="mediaCompact ? 'mt-0.5 text-xs sm:text-sm' : 'mt-1 text-sm'"
+                >
+                  {{ subtitle }}
+                </p>
+              </div>
 
-            <div class="mt-2.5 shrink-0 sm:mt-5">
-              <slot />
+              <div class="shrink-0 sm:mt-5" :class="mediaCompact ? 'mt-1.5' : 'mt-2.5'">
+                <slot />
+              </div>
             </div>
           </div>
         </section>

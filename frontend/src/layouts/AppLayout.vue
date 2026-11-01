@@ -74,7 +74,7 @@ async function renameActive() {
 
 async function logout() {
   await auth.logout()
-  router.push({ name: 'landing' })
+  router.push({ name: 'login' })
 }
 
 function onDocClick(e: MouseEvent) {

@@ -93,6 +93,16 @@ class GoogleAuthTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_google_callback_cancel_redirects_to_login_without_socialite(): void
+    {
+        Socialite::shouldReceive('driver')->never();
+
+        $this->get('/auth/google/callback?error=access_denied&state=cancelled')
+            ->assertRedirect(rtrim((string) config('app.frontend_url'), '/').'/login?error=google');
+
+        $this->assertGuest();
+    }
+
     public function test_google_only_user_can_set_first_password_without_current(): void
     {
         $user = User::factory()->create([

@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 
+withDefaults(
+  defineProps<{
+    compact?: boolean
+  }>(),
+  { compact: false },
+)
+
 const { t } = useI18n()
 
 function onGoogle() {
@@ -10,18 +17,16 @@ function onGoogle() {
 
 <template>
   <div>
-    <div class="relative my-2.5 sm:my-4">
-      <div class="absolute inset-0 flex items-center" aria-hidden="true">
-        <div class="w-full border-t border-gray-200" />
-      </div>
-      <div class="relative flex justify-center text-xs">
-        <span class="bg-background px-3 font-medium text-gray-400">{{ t('login_or_continue_with') }}</span>
-      </div>
+    <div class="flex items-center gap-3" :class="compact ? 'my-1.5 sm:my-4' : 'my-2.5 sm:my-4'">
+      <span class="h-px min-w-0 flex-1 bg-gray-200" aria-hidden="true" />
+      <span class="shrink-0 text-xs font-medium text-gray-400">{{ t('login_or_continue_with') }}</span>
+      <span class="h-px min-w-0 flex-1 bg-gray-200" aria-hidden="true" />
     </div>
 
     <button
       type="button"
-      class="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-primary/40 hover:bg-soft-blue sm:py-3"
+      class="flex w-full items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white px-4 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-primary/40 hover:bg-soft-blue sm:py-3"
+      :class="compact ? 'py-2' : 'py-2.5'"
       @click="onGoogle"
     >
       <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">

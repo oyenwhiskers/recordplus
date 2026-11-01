@@ -13,7 +13,7 @@ const { t } = useI18n()
 
 async function logout() {
   await auth.logout()
-  router.push({ name: 'landing' })
+  router.push({ name: 'login' })
 }
 </script>
 

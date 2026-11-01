@@ -21,18 +21,24 @@ class GoogleAuthController extends Controller
     public function callback(Request $request, ProfileOnboardingService $onboarding): RedirectResponse
     {
         $frontend = rtrim((string) config('app.frontend_url'), '/');
+        $failedLogin = $frontend.'/login?error=google';
+
+        // Cancel / deny returns error=… without a code; do not call Socialite::user().
+        if ($request->filled('error')) {
+            return redirect()->to($failedLogin);
+        }
 
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (Throwable) {
-            return redirect()->to($frontend.'/login?error=google');
+            return redirect()->to($failedLogin);
         }
 
         $googleId = (string) $googleUser->getId();
         $email = $googleUser->getEmail();
 
         if ($googleId === '' || ! is_string($email) || $email === '') {
-            return redirect()->to($frontend.'/login?error=google');
+            return redirect()->to($failedLogin);
         }
 
         $user = User::query()->where('google_id', $googleId)->first();

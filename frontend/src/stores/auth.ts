@@ -37,9 +37,14 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout() {
-    await ensureCsrf()
-    await api.post('/logout')
-    user.value = null
+    try {
+      await ensureCsrf()
+      await api.post('/logout')
+    } catch {
+      // Session may already be gone (cancelled OAuth / expired cookie).
+    } finally {
+      user.value = null
+    }
   }
 
   async function updateAccount(payload: {

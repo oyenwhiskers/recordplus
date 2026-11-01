@@ -19,6 +19,15 @@ class AccountUpdateTest extends TestCase
         ])->assertUnauthorized();
     }
 
+    public function test_guest_can_logout(): void
+    {
+        $this->postJson('/api/logout')
+            ->assertOk()
+            ->assertJsonPath('message', 'Logged out');
+
+        $this->assertGuest();
+    }
+
     public function test_can_update_name_and_email(): void
     {
         $user = User::factory()->create([

@@ -241,6 +241,76 @@ body {
   padding-right: var(--rp-sar);
 }
 
+/* Login ↔ signup: crossfade + light slide (shell chrome matches so it reads seamless) */
+.rp-route-root {
+  position: relative;
+  min-height: 100svh;
+}
+
+.auth-none-enter-active,
+.auth-none-leave-active {
+  transition: none;
+}
+
+.auth-forward-enter-active,
+.auth-forward-leave-active,
+.auth-back-enter-active,
+.auth-back-leave-active {
+  transition:
+    opacity 0.28s ease,
+    transform 0.28s ease;
+}
+
+.auth-forward-leave-active,
+.auth-back-leave-active {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.auth-forward-enter-active,
+.auth-back-enter-active {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-forward-enter-from {
+  opacity: 0;
+  transform: translate3d(1.1rem, 0, 0);
+}
+
+.auth-forward-leave-to {
+  opacity: 0;
+  transform: translate3d(-0.85rem, 0, 0);
+}
+
+.auth-back-enter-from {
+  opacity: 0;
+  transform: translate3d(-1.1rem, 0, 0);
+}
+
+.auth-back-leave-to {
+  opacity: 0;
+  transform: translate3d(0.85rem, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-forward-enter-active,
+  .auth-forward-leave-active,
+  .auth-back-enter-active,
+  .auth-back-leave-active {
+    transition: opacity 0.15s ease;
+  }
+
+  .auth-forward-enter-from,
+  .auth-forward-leave-to,
+  .auth-back-enter-from,
+  .auth-back-leave-to {
+    transform: none;
+  }
+}
+
 /* Native select: inset chevron so it isn't flush with the border */
 select.rp-select {
   appearance: none;

@@ -99,14 +99,20 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
+  // Laravel owns /auth/*; if the SW ever serves the SPA shell here, kick to login.
+  if (to.path.startsWith('/auth/')) {
+    return { name: 'login', query: { error: 'google' } }
+  }
+
   const auth = useAuthStore()
   if (!auth.bootstrapped) {
     await auth.fetchMe()
   }
 
-  if (to.meta.auth && !auth.user) {
+  const needsAuth = to.matched.some((record) => record.meta.auth)
+  if (needsAuth && !auth.user) {
     return {
-      name: 'landing',
+      name: 'login',
       query: to.name === 'home' ? {} : { redirect: to.fullPath },
     }
   }
