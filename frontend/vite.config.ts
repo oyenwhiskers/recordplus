@@ -62,6 +62,9 @@ export default defineConfig(({ mode }) => {
           ],
         },
         workbox: {
+          // injectRegister:false skips plugin auto-inject; set these so open tabs activate+claim.
+          skipWaiting: true,
+          clientsClaim: true,
           navigateFallback: '/index.html',
           navigateFallbackDenylist: PWA_NAVIGATE_FALLBACK_DENYLIST,
           runtimeCaching: [

@@ -110,29 +110,6 @@ const allVisibleSelected = computed(
   () => documents.value.length > 0 && documents.value.every((doc) => selectedIds.value.has(doc.id)),
 )
 
-const filterSummary = computed(() => {
-  const parts: string[] = []
-  if (sort.value === 'oldest') parts.push(t('sort_oldest'))
-  if (sort.value === 'name_asc') parts.push(t('sort_name_asc'))
-  if (sort.value === 'name_desc') parts.push(t('sort_name_desc'))
-  if (dateFrom.value || dateTo.value) {
-    const from = dateFrom.value || '…'
-    const to = dateTo.value || '…'
-    parts.push(`${from} → ${to}`)
-  }
-  return parts.join(' · ')
-})
-
-const searchScopedHint = computed(() => {
-  if (!appliedQ.value && !filtersActive.value) return ''
-  if (status.value === 'needs_review') return t('files_within_needs_review')
-  if (categoryId.value) {
-    const name = categories.value.find((c) => c.id === categoryId.value)?.name
-    return name ? t('files_within_named', { name }) : t('files_within_category')
-  }
-  return t('files_all_documents')
-})
-
 const emptyCopy = computed(() => {
   if (appliedQ.value || filtersActive.value) {
     return {
@@ -703,13 +680,6 @@ async function onDocumentMenu(doc: DocumentItem, action: DocumentMenuAction) {
   if (action === 'delete') {
     await deleteDocument(doc)
   }
-}
-
-function searchAllDocuments() {
-  router.push({
-    name: 'files',
-    query: appliedQ.value ? { q: appliedQ.value } : {},
-  })
 }
 
 function onBrowseYearSelect(event: Event) {
@@ -1289,32 +1259,6 @@ watch(
               </button>
             </div>
 
-            <div
-              v-if="appliedQ || filtersActive"
-              class="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500"
-            >
-              <span>
-                {{ searchScopedHint }}
-                <template v-if="filterSummary"> · {{ filterSummary }}</template>
-                · {{ t(total === 1 ? 'files_count_result' : 'files_count_results', { count: total }) }}
-              </span>
-              <button
-                v-if="categoryId || status"
-                type="button"
-                class="font-semibold text-primary hover:underline"
-                @click="searchAllDocuments"
-              >
-                {{ t('action_search_all_documents') }}
-              </button>
-              <button
-                v-if="filtersActive"
-                type="button"
-                class="font-semibold text-primary hover:underline"
-                @click="clearFilters"
-              >
-                {{ t('action_clear_filters') }}
-              </button>
-            </div>
           </template>
 
           <!-- Mobile year + category pills (not sticky during multi-select) -->

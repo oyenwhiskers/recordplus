@@ -437,14 +437,26 @@ watch(
                 <p v-if="editingProfileError" class="mt-1 text-xs text-red-600">{{ editingProfileError }}</p>
               </div>
               <div v-else class="min-w-0 flex-1">
-                <div class="flex min-w-0 items-center gap-2">
-                  <p class="truncate text-sm font-medium text-gray-900">{{ profile.name }}</p>
-                  <span
+                <div class="flex min-w-0 items-center gap-1.5">
+                  <svg
                     v-if="profile.id === auth.activeProfile?.id"
-                    class="inline-flex shrink-0 items-center rounded-full bg-soft-blue px-2 py-0.5 text-[11px] font-semibold text-primary"
+                    class="h-4 w-4 shrink-0 text-primary"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
                   >
-                    {{ t('label_current_profile') }}
-                  </span>
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <p class="truncate text-sm font-medium text-gray-900">
+                    {{ profile.name }}
+                    <span v-if="profile.id === auth.activeProfile?.id" class="sr-only">
+                      ({{ t('label_current_profile') }})
+                    </span>
+                  </p>
                 </div>
                 <p class="text-xs text-gray-400">
                   {{ profile.categories?.length ?? 0 }}
@@ -480,13 +492,15 @@ watch(
               <template v-else>
                 <button
                   type="button"
-                  class="inline-flex h-9 shrink-0 items-center justify-center rounded-lg px-2 text-xs font-semibold text-primary hover:bg-soft-blue disabled:opacity-40"
+                  class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-primary hover:bg-soft-blue disabled:opacity-40"
                   :title="t('tooltip_switch_profile')"
                   :aria-label="t('tooltip_switch_profile')"
                   :disabled="profile.id === auth.activeProfile?.id"
                   @click="switchToProfile(profile)"
                 >
-                  {{ t('action_switch') }}
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                  </svg>
                 </button>
                 <button
                   type="button"
