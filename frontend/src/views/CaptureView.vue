@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import api, { ensureCsrf } from '@/api/client'
 import { useAuthStore } from '@/stores/auth'
 import type { Category, DocumentItem, DocumentStatus } from '@/types'
@@ -8,10 +9,13 @@ import AppPage from '@/components/AppPage.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import { confirmAction, notify, promptCategoryChoice, showSuccess } from '@/lib/confirm'
 import { formatAmount as documentFormatAmount, primary as documentPrimary, secondary as documentSecondary } from '@/lib/documentDisplay'
+import { takeSharedFiles } from '@/lib/shareTargetReceive'
 
 defineOptions({ name: 'CaptureView' })
 
 const { t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
 type CapturePhase = 'uploading' | 'analysing' | 'filed' | 'needs_review' | 'failed'
 
@@ -118,7 +122,7 @@ function isAllowed(file: File) {
   return file.type.startsWith('image/') || file.type === 'application/pdf'
 }
 
-function addFiles(fileList: FileList | null) {
+function addFiles(fileList: FileList | File[] | null) {
   if (!fileList?.length) return
 
   for (const file of Array.from(fileList)) {
@@ -622,6 +626,15 @@ onMounted(() => {
   detectDevice()
   window.addEventListener('resize', detectDevice)
   loadCategories()
+
+  if (route.query.shared) {
+    void takeSharedFiles().then((files) => {
+      if (files.length) {
+        addFiles(files)
+      }
+      void router.replace({ name: 'capture' })
+    })
+  }
 })
 
 onUnmounted(() => {

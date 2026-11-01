@@ -60,11 +60,20 @@ export default defineConfig(({ mode }) => {
               type: 'image/png',
             },
           ],
+          share_target: {
+            action: '/share-target',
+            method: 'POST',
+            enctype: 'multipart/form-data',
+            params: {
+              files: [{ name: 'files', accept: ['image/*', 'application/pdf', '.pdf'] }],
+            },
+          },
         },
         workbox: {
           // injectRegister:false skips plugin auto-inject; set these so open tabs activate+claim.
           skipWaiting: true,
           clientsClaim: true,
+          importScripts: ['/share-target-sw.js'],
           navigateFallback: '/index.html',
           navigateFallbackDenylist: PWA_NAVIGATE_FALLBACK_DENYLIST,
           runtimeCaching: [
