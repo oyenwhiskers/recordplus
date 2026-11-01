@@ -44,11 +44,11 @@ withDefaults(
         :class="showMedia ? 'lg:grid lg:grid-cols-2' : ''"
       >
         <section
-          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-5 pb-[max(1.5rem,calc(var(--rp-sab)+0.75rem))] pt-0 sm:px-6 lg:overflow-y-visible lg:bg-white lg:px-10 lg:pb-10 lg:pt-24 xl:px-16"
+          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-5 pb-[max(1.5rem,calc(var(--rp-sab)+0.75rem))] pt-0 sm:px-6 lg:justify-center lg:overflow-y-auto lg:bg-white lg:px-10 lg:py-10 lg:pt-24 xl:px-16"
         >
-          <!-- min-h-full + justify-center: centers when short, scrolls from top when tall -->
+          <!-- min-h-full + justify-center: centers in column; scrolls when form is taller than viewport -->
           <div
-            class="flex min-h-full w-full flex-col justify-center lg:min-h-0 lg:py-0"
+            class="flex min-h-full w-full flex-col justify-center lg:min-h-0"
             :class="mediaCompact ? 'py-0' : 'py-2'"
           >
             <div class="mx-auto flex w-full max-w-[22rem] flex-col lg:max-w-[26rem]">
