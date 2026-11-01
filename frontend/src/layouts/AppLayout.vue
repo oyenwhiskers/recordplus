@@ -212,22 +212,22 @@ const profileLabel = computed(() => auth.activeProfile?.name ?? t('label_no_prof
     </main>
 
     <nav
-      class="z-30 shrink-0 border-t border-gray-100 bg-white pb-[max(0.25rem,var(--rp-sab))] pt-0.5 md:hidden"
+      class="z-30 shrink-0 overflow-visible border-t border-gray-100 bg-white pb-[max(0.375rem,var(--rp-sab))] pt-1 md:hidden"
       :aria-label="t('nav_primary')"
     >
-      <div class="mx-auto grid max-w-lg grid-cols-5 gap-0.5 px-1 pb-0.5 pt-1">
+      <div class="mx-auto grid max-w-lg grid-cols-5 items-stretch gap-0.5 px-1 py-1.5">
         <RouterLink
           v-for="item in nav"
           :key="item.name"
           :to="item.to"
-          class="flex min-h-11 flex-col items-center justify-center rounded-xl px-1 py-1 text-center text-[10px] font-semibold leading-tight sm:text-xs"
+          class="flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-1.5 text-center text-[10px] font-semibold leading-tight sm:text-xs"
           :class="[
             isActive(item.name) ? 'bg-soft-blue text-primary' : 'text-gray-500',
             item.emphasize && !isActive(item.name) ? 'text-primary' : '',
           ]"
         >
           <span
-            class="mb-0.5 flex h-7 w-7 items-center justify-center rounded-full"
+            class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full"
             :class="item.emphasize
               ? (isActive(item.name) ? 'bg-primary text-white' : 'bg-primary/10 text-primary')
               : (isActive(item.name) ? 'text-primary' : 'text-current')"
