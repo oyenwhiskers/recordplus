@@ -305,8 +305,58 @@ class FilingContextTest extends TestCase
                 && str_contains($text, 'Do NOT return a title')
                 && str_contains($text, 'Warranty')
                 && str_contains($text, 'Academic Certificate')
-                && str_contains($text, 'Payment not completed (COD');
+                && str_contains($text, 'Payment not completed (COD')
+                && str_contains($text, 'These are purchase records')
+                && str_contains($text, 'defaults undated filings to the upload date');
         });
+    }
+
+    public function test_missing_document_date_defaults_to_upload_date(): void
+    {
+        $user = User::factory()->create();
+        $profile = app(ProfileOnboardingService::class)->onboard($user);
+
+        $document = Document::factory()->create([
+            'user_id' => $user->id,
+            'profile_id' => $profile->id,
+            'status' => DocumentStatus::Processing,
+            'created_at' => '2026-11-02 03:15:00',
+            'document_date' => null,
+        ]);
+
+        app(FilingEngine::class)->applyExtraction($document, [
+            'document_type' => 'Invoice',
+            'title' => null,
+            'document_date' => null,
+            'merchant' => 'boong',
+            'reference_number' => '586880737131268060',
+            'amount' => '174.35',
+            'currency' => 'MYR',
+            'recommended_category_id' => null,
+            'suggested_new_category_name' => 'Purchases',
+            'extracted_data' => [
+                'amounts' => [[
+                    'value' => '174.35',
+                    'currency' => 'MYR',
+                    'role' => 'total_due',
+                    'payment_status' => 'unpaid',
+                    'uncertain' => false,
+                ]],
+                'dates' => [],
+                'interpretation' => [
+                    'has_structured_money_dates' => true,
+                    'expense_eligible' => false,
+                    'primary_amount_role' => 'total_due',
+                    'primary_date_role' => null,
+                ],
+            ],
+        ]);
+
+        $document->refresh();
+        $this->assertSame('2026-11-02', $document->document_date?->format('Y-m-d'));
+        $this->assertSame('boong', $document->merchant);
+        $this->assertSame('586880737131268060', $document->reference_number);
+        $this->assertSame('174.35', (string) $document->amount);
     }
 
     public function test_sanitize_extraction_keeps_valid_filing_context(): void

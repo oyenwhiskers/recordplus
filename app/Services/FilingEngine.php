@@ -96,6 +96,15 @@ class FilingEngine
             }
         }
 
+        // Undated AI extraction: file under the upload day so month browse still works.
+        if (
+            array_key_exists('document_date', $incoming)
+            && ($incoming['document_date'] === null || $incoming['document_date'] === '')
+            && $document->created_at !== null
+        ) {
+            $incoming['document_date'] = $document->created_at->timezone(config('app.timezone'))->format('Y-m-d');
+        }
+
         $document->fill([
             ...$incoming,
             'extracted_data' => $extractedData,

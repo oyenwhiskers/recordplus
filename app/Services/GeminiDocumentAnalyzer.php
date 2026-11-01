@@ -139,6 +139,12 @@ amounts: zero or more objects:
 Examples: insurance premium + coverage; invoice total_due; receipt paid; bank balance. Omit amounts that are unclear.
 
 Marketplace / e-commerce order pages (Shopee, TikTok Shop, etc.):
+- These are purchase records: identify shop, order id, total, payment state, and what was bought.
+- merchant = shop/seller name (not the marketplace brand unless no shop name is shown).
+- reference_number = Order Number / Order ID when present.
+- recipient = delivery recipient name when shown; product_name or subject = main product / short order summary.
+- notes may include payment method (e.g. COD) and order status when useful.
+- filing_context is usually supplier_purchase for goods bought for the profile.
 - Prefer the labeled Total / Order Total / Total Payment. Never invent a total from unit price × qty when a labeled total exists.
 - Payment not completed (COD, unpaid, awaiting payment, in transit without paid evidence) -> document_type Invoice, amount role total_due, payment_status unpaid.
 - Payment completed / paid receipt / payment evidence -> document_type Receipt, amount role paid, payment_status paid or evidence_present.
@@ -147,7 +153,8 @@ Marketplace / e-commerce order pages (Shopee, TikTok Shop, etc.):
 dates: zero or more objects:
 { "value": "YYYY-MM-DD", "role": one of [{$dateRoles}], "uncertain": boolean }
 Include document/transaction/due/expiry/renewal/period dates only when clearly present.
-Do not invent a document date.
+Do not invent a document date. Partial labels without a full calendar date (e.g. "7 Nov" with no year) are not enough — omit them; the app defaults undated filings to the upload date.
+Guaranteed or estimated delivery may use role due only when a full YYYY-MM-DD is clearly readable.
 
 Also include optional type-specific keys only when clearly readable (otherwise omit or null):
 subject, issuer, recipient, policy_number, insured, institution, product_name, brand, serial_number, statement_period, parties, notes.
