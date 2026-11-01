@@ -107,9 +107,8 @@ async function submit() {
     <SocialAuthButtons />
 
     <p class="mt-2.5 text-center text-sm text-gray-500 sm:mt-4">
-      <RouterLink to="/register" class="font-semibold text-primary hover:underline">
-        {{ t('login_create_account') }}
-      </RouterLink>
+      {{ t('login_new_here') }}
+      <RouterLink to="/register" class="font-semibold text-primary hover:underline">{{ t('action_create_account') }}</RouterLink>
     </p>
   </AuthShell>
 </template>

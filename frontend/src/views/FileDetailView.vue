@@ -676,7 +676,7 @@ onUnmounted(() => {
       />
 
       <div
-        class="relative z-10 flex h-dvh w-full flex-col bg-white pt-[env(safe-area-inset-top)] md:h-auto md:max-h-[min(44rem,92vh)] md:max-w-2xl md:rounded-2xl md:pt-0 md:shadow-xl"
+        class="relative z-10 flex h-dvh w-full flex-col bg-white pt-[var(--rp-sat)] md:h-auto md:max-h-[min(44rem,92vh)] md:max-w-2xl md:rounded-2xl md:pt-0 md:shadow-xl"
       >
         <div class="flex shrink-0 items-center gap-2 border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
           <button
@@ -1015,7 +1015,7 @@ onUnmounted(() => {
 
         <div
           v-if="document && editing"
-          class="flex shrink-0 gap-2 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6 md:pb-3"
+          class="flex shrink-0 gap-2 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,var(--rp-sab))] sm:px-6 md:pb-3"
         >
           <button
             type="button"
@@ -1037,7 +1037,7 @@ onUnmounted(() => {
 
         <div
           v-else-if="document && !editing"
-          class="flex shrink-0 items-center gap-2.5 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6 md:pb-3"
+          class="flex shrink-0 items-center gap-2.5 border-t border-gray-100 px-4 py-3 pb-[max(0.75rem,var(--rp-sab))] sm:px-6 md:pb-3"
         >
           <button
             type="button"
@@ -1087,7 +1087,7 @@ onUnmounted(() => {
       :aria-label="t('aria_document_preview')"
     >
       <header
-        class="flex shrink-0 items-center gap-2 border-b border-white/10 bg-gray-950 px-3 py-2.5 pt-[max(0.625rem,env(safe-area-inset-top))] sm:px-4"
+        class="flex shrink-0 items-center gap-2 border-b border-white/10 bg-gray-950 px-3 py-2.5 pt-[max(0.625rem,var(--rp-sat))] sm:px-4"
       >
         <button
           type="button"
@@ -1157,7 +1157,7 @@ onUnmounted(() => {
 
         <div
           v-else-if="previewUrl && isImage"
-          class="flex h-full items-center justify-center overflow-auto bg-black px-3 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+          class="flex h-full items-center justify-center overflow-auto bg-black px-3 py-4 pb-[max(1rem,var(--rp-sab))]"
           @click.self="closePreview"
         >
           <img

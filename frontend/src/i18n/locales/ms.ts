@@ -52,7 +52,7 @@ export default {
   login_tagline: 'Muat Naik Je. Kami Uruskan Pemfailan.',
   action_sign_in: 'Log masuk',
   login_failed: 'Log masuk gagal.',
-  login_new_here: 'Baru di sini?',
+  login_new_here: 'Belum ada akaun?',
   login_create_account: 'Cipta akaun',
   login_welcome_title: 'Log masuk di sini',
   login_welcome_subtitle: 'Selamat kembali — kami rindu anda!',

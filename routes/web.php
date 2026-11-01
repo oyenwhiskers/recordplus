@@ -12,9 +12,16 @@ Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->
 Route::get('/{any?}', function () {
     $spa = public_path('index.html');
 
+    $noCacheHeaders = [
+        'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        'Pragma' => 'no-cache',
+    ];
+
     if (File::exists($spa) && File::exists(public_path('index.php'))) {
-        return response()->file($spa);
+        return response()->file($spa, $noCacheHeaders);
     }
 
-    return view('spa');
+    return response()
+        ->view('spa')
+        ->withHeaders($noCacheHeaders);
 })->where('any', '^(?!api|sanctum|up|auth).*$');

@@ -194,10 +194,17 @@
   --rp-sab: env(safe-area-inset-bottom, 0px);
   --rp-sal: env(safe-area-inset-left, 0px);
   --rp-sar: env(safe-area-inset-right, 0px);
+  /* auth art budget: header + title + fields + social + footer */
+  --rp-auth-chrome: 22rem;
+  --rp-auth-chrome-compact: 26rem;
 }
 
-/* shortcut: no forced min bottom inset — OS already reserves 3-button nav outside svh on many Androids; forcing 48px stacked a dead gap under the tab bar. Revisit if edge-to-edge devices report 0 while overlapping tabs. */
+/* shortcut: floor top inset only in installed PWA — some Androids report 0 under a translucent status bar. Do not floor bottom: 3-button nav often sits outside svh and a fake sab stacks a dead gap under the tab bar. */
 @media (display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui) {
+  :root {
+    --rp-sat: max(env(safe-area-inset-top, 0px), 1.25rem);
+  }
+
   html {
     height: 100%;
     height: 100svh;
@@ -205,6 +212,7 @@
 }
 
 html.rp-pwa {
+  --rp-sat: max(env(safe-area-inset-top, 0px), 1.25rem);
   height: 100%;
   height: 100svh;
 }

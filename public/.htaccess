@@ -23,3 +23,14 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# PWA shell + SW must revalidate or phones keep the previous deploy.
+<IfModule mod_headers.c>
+    <FilesMatch "^(index\.html|sw\.js)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+    <Files "manifest.webmanifest">
+        Header set Cache-Control "no-cache"
+    </Files>
+</IfModule>

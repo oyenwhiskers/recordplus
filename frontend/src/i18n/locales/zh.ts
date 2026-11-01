@@ -52,7 +52,7 @@ export default {
   login_tagline: '只需上传，归档交给我们。',
   action_sign_in: '登录',
   login_failed: '登录失败。',
-  login_new_here: '新用户？',
+  login_new_here: '还没有账户？',
   login_create_account: '创建账户',
   login_welcome_title: '在此登录',
   login_welcome_subtitle: '欢迎回来——我们想你了！',

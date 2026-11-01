@@ -53,7 +53,7 @@ export default {
   login_tagline: 'Just Upload. We Handle the Filing.',
   action_sign_in: 'Sign in',
   login_failed: 'Sign in failed.',
-  login_new_here: 'New here?',
+  login_new_here: "Don't have an account?",
   login_create_account: 'Create an account',
   login_welcome_title: 'Login here',
   login_welcome_subtitle: "Welcome back — you've been missed!",

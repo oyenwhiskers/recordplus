@@ -17,14 +17,14 @@ withDefaults(
 </script>
 
 <template>
-  <!-- svh = visible area in installed PWA; flex-1 art was blowing past Android nav -->
+  <!-- svh = visible area in installed PWA; art sized against leftover height so form + safe zones stay on-screen -->
   <div class="flex h-svh max-h-svh flex-col overflow-hidden bg-background font-sans text-gray-900 antialiased">
     <div
       class="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_45%_at_50%_0%,rgba(45,107,255,0.1),transparent_50%),radial-gradient(ellipse_55%_35%_at_100%_100%,rgba(232,241,255,0.85),transparent_45%)] lg:hidden"
       aria-hidden="true"
     />
 
-    <header class="relative z-20 shrink-0 px-5 pb-2 pt-[max(1rem,calc(var(--rp-sat)+0.35rem))] sm:px-6 sm:pt-[max(1.25rem,calc(var(--rp-sat)+0.5rem))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pb-0 lg:pt-7">
+    <header class="relative z-20 shrink-0 px-5 pb-1.5 pt-[max(1.25rem,calc(var(--rp-sat)+0.5rem))] sm:px-6 sm:pb-2 sm:pt-[max(1.5rem,calc(var(--rp-sat)+0.5rem))] lg:absolute lg:left-0 lg:top-0 lg:z-30 lg:px-10 lg:pb-0 lg:pt-7">
       <RouterLink to="/" class="inline-flex items-center gap-2">
         <img
           src="/recordplus_logo_app.png"
@@ -44,21 +44,21 @@ withDefaults(
         :class="showMedia ? 'lg:grid lg:grid-cols-2' : ''"
       >
         <section
-          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-5 pb-[max(1.5rem,calc(var(--rp-sab)+0.75rem))] pt-0 sm:px-6 lg:justify-center lg:overflow-y-auto lg:bg-white lg:px-10 lg:py-10 lg:pt-24 xl:px-16"
+          class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-5 pb-[max(1.25rem,calc(var(--rp-sab)+1rem))] pt-0 sm:px-6 sm:pb-[max(1.5rem,calc(var(--rp-sab)+0.75rem))] lg:justify-center lg:overflow-y-auto lg:bg-white lg:px-10 lg:py-10 lg:pt-24 xl:px-16"
         >
-          <!-- min-h-full + justify-center: centers in column; scrolls when form is taller than viewport -->
+          <!-- short phones: top-align so CTA isn't clipped; taller: center -->
           <div
-            class="flex min-h-full w-full flex-col justify-center lg:min-h-0"
-            :class="mediaCompact ? 'py-0' : 'py-2'"
+            class="flex min-h-full w-full flex-col justify-start [@media(min-height:740px)]:justify-center lg:min-h-0 lg:justify-center"
+            :class="mediaCompact ? 'py-0' : 'py-1 sm:py-2'"
           >
             <div class="mx-auto flex w-full max-w-[22rem] flex-col lg:max-w-[26rem]">
               <div
                 v-if="showMedia"
-                class="mx-auto flex max-w-full shrink-0 items-center justify-center overflow-hidden lg:hidden"
+                class="mx-auto flex max-w-full shrink-0 items-center justify-center overflow-hidden lg:hidden [@media(max-height:620px)]:hidden"
                 :class="
                   mediaCompact
-                    ? 'mb-1 size-[min(38svh,16.5rem)]'
-                    : 'mb-2 size-[min(52svh,21.5rem)]'
+                    ? 'mb-1 size-[min(30svh,max(0px,calc(100svh-var(--rp-sat)-var(--rp-sab)-var(--rp-auth-chrome-compact))),14rem)]'
+                    : 'mb-1.5 size-[min(38svh,max(0px,calc(100svh-var(--rp-sat)-var(--rp-sab)-var(--rp-auth-chrome))),17rem)] sm:mb-2'
                 "
               >
                 <div class="relative flex size-full items-center justify-center overflow-hidden">

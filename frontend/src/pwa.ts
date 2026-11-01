@@ -1,4 +1,5 @@
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]'])
+const UPDATE_CHECK_MS = 15 * 60 * 1000
 
 function isLocalDevHost(): boolean {
   return LOCAL_HOSTS.has(window.location.hostname)
@@ -22,6 +23,10 @@ async function destroyLocalServiceWorker(): Promise<void> {
   window.location.reload()
 }
 
+function activateWaitingWorker(registration: ServiceWorkerRegistration): void {
+  registration.waiting?.postMessage({ type: 'SKIP_WAITING' })
+}
+
 export async function setupPwa(): Promise<void> {
   const { isStandalone, setupPwaInstallListeners } = await import('@/lib/pwaInstall')
   if (isStandalone()) {
@@ -43,10 +48,19 @@ export async function setupPwa(): Promise<void> {
         return
       }
 
-      // Phones (esp. installed PWA) often skip update checks until resume.
+      // Stuck waiting SW from a prior visit — activate so autoUpdate can reload.
+      activateWaitingWorker(registration)
+
       const check = () => {
-        void registration.update()
+        void registration.update().then(() => {
+          activateWaitingWorker(registration)
+        })
       }
+
+      check()
+      window.setInterval(check, UPDATE_CHECK_MS)
+
+      // Phones (esp. installed PWA) often skip update checks until resume.
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
           check()

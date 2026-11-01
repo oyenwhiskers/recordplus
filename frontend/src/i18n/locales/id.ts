@@ -52,7 +52,7 @@ export default {
   login_tagline: 'Cukup Unggah. Kami Urus Pengarsipan.',
   action_sign_in: 'Masuk',
   login_failed: 'Gagal masuk.',
-  login_new_here: 'Baru di sini?',
+  login_new_here: 'Belum punya akun?',
   login_create_account: 'Buat akun',
   login_welcome_title: 'Masuk di sini',
   login_welcome_subtitle: 'Selamat datang kembali — kami merindukan Anda!',
