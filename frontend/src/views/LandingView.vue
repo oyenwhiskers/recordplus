@@ -216,19 +216,19 @@ async function onLandingInstall(): Promise<void> {
               </span>
             </div>
 
-            <div class="hero-copy-actions flex flex-col items-center gap-3 md:mt-8 md:flex-row md:items-stretch md:justify-start">
+            <div class="hero-copy-actions flex flex-col items-center gap-3 md:mt-8 md:flex-row md:items-center md:justify-start">
               <RouterLink
                 to="/register"
-                class="hero-cta-primary inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 md:max-w-none md:py-3.5"
+                class="inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 md:w-auto md:min-w-[12.5rem] md:py-3.5"
               >
                 {{ t('action_create_account') }}
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </RouterLink>
               <RouterLink
                 :to="loginTo"
-                class="inline-flex w-full max-w-sm items-center justify-center rounded-xl border border-gray-200 bg-white px-6 py-4 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 md:max-w-none md:py-3.5"
+                class="inline-flex w-full max-w-sm items-center justify-center rounded-xl border border-gray-200 bg-white px-6 py-4 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-50 md:w-auto md:min-w-[12.5rem] md:py-3.5"
               >
                 {{ t('action_sign_in') }}
               </RouterLink>
