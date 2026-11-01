@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
@@ -808,7 +808,11 @@ function openFilters() {
   draftSort.value = sort.value
   draftDateFrom.value = dateFrom.value
   draftDateTo.value = dateTo.value
-  showFilters.value = !showFilters.value
+  showFilters.value = true
+}
+
+function closeFilters() {
+  showFilters.value = false
 }
 
 function applyFilters() {
@@ -868,13 +872,6 @@ function setDatePreset(preset: 'month' | '30d' | 'clear') {
   const from = new Date(today.getFullYear(), today.getMonth(), 1)
   draftDateFrom.value = clampToFolderDate(toYmd(from))
   draftDateTo.value = clampToFolderDate(to)
-}
-
-function onDocumentClick(event: MouseEvent) {
-  const target = event.target as HTMLElement | null
-  if (!target?.closest('[data-filter-popover]')) {
-    showFilters.value = false
-  }
 }
 
 async function loadMore() {
@@ -1130,12 +1127,7 @@ function selectCategory(id: number) {
 }
 
 onMounted(async () => {
-  document.addEventListener('click', onDocumentClick)
   await syncFromRoute()
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', onDocumentClick)
 })
 
 watch(
@@ -1277,105 +1269,24 @@ watch(
                 </button>
               </label>
 
-              <div class="relative shrink-0" data-filter-popover>
-                <button
-                  type="button"
-                  class="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-white text-gray-600 hover:bg-gray-50"
-                  :class="filtersActive || showFilters ? 'border-primary text-primary' : 'border-gray-200'"
-                  :title="t('label_filters')"
-                  :aria-label="t('label_filters')"
-                  :aria-expanded="showFilters"
-                  @click.stop="openFilters"
-                >
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 4h18l-7 8v5l-4 2v-7L3 4z" />
-                  </svg>
-                  <span
-                    v-if="filtersActive"
-                    class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"
-                    aria-hidden="true"
-                  />
-                </button>
-
-                <div
-                  v-if="showFilters"
-                  class="absolute right-0 z-30 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-gray-100 bg-white p-4 shadow-xl"
-                  @click.stop
-                >
-                  <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-sm font-semibold text-gray-900">{{ t('label_filters') }}</h3>
-                    <button
-                      type="button"
-                      class="text-xs font-semibold text-gray-500 hover:text-primary"
-                      @click="clearFilters"
-                    >
-                      {{ t('action_clear') }}
-                    </button>
-                  </div>
-
-                  <label class="mt-4 block text-xs font-medium text-gray-500">{{ t('label_sort') }}</label>
-                  <select
-                    v-model="draftSort"
-                    class="mt-1.5 min-h-10 w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary"
-                  >
-                    <option value="newest">{{ t('sort_newest') }}</option>
-                    <option value="oldest">{{ t('sort_oldest') }}</option>
-                    <option value="name_asc">{{ t('sort_name_asc') }}</option>
-                    <option value="name_desc">{{ t('sort_name_desc') }}</option>
-                  </select>
-
-                  <p class="mt-4 text-xs font-medium text-gray-500">{{ t('label_document_date') }}</p>
-                  <div class="mt-1.5 grid grid-cols-3 gap-1.5">
-                    <button
-                      type="button"
-                      class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                      @click="setDatePreset('clear')"
-                    >
-                      {{ t('filter_any') }}
-                    </button>
-                    <button
-                      type="button"
-                      class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                      @click="setDatePreset('30d')"
-                    >
-                      {{ t('filter_last_30_days') }}
-                    </button>
-                    <button
-                      type="button"
-                      class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                      @click="setDatePreset('month')"
-                    >
-                      {{ t('filter_this_month') }}
-                    </button>
-                  </div>
-                  <div class="mt-2 grid grid-cols-2 gap-2">
-                    <label class="block">
-                      <span class="sr-only">{{ t('aria_from_date') }}</span>
-                      <input
-                        v-model="draftDateFrom"
-                        type="date"
-                        class="min-h-10 w-full rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
-                      />
-                    </label>
-                    <label class="block">
-                      <span class="sr-only">{{ t('aria_to_date') }}</span>
-                      <input
-                        v-model="draftDateTo"
-                        type="date"
-                        class="min-h-10 w-full rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
-                      />
-                    </label>
-                  </div>
-
-                  <button
-                    type="button"
-                    class="mt-4 flex min-h-10 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white hover:bg-blue-600"
-                    @click="applyFilters"
-                  >
-                    {{ t('action_apply') }}
-                  </button>
-                </div>
-              </div>
+              <button
+                type="button"
+                class="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-white text-gray-600 hover:bg-gray-50"
+                :class="filtersActive || showFilters ? 'border-primary text-primary' : 'border-gray-200'"
+                :title="t('label_filters')"
+                :aria-label="t('label_filters')"
+                :aria-expanded="showFilters"
+                @click="openFilters"
+              >
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 4h18l-7 8v5l-4 2v-7L3 4z" />
+                </svg>
+                <span
+                  v-if="filtersActive"
+                  class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"
+                  aria-hidden="true"
+                />
+              </button>
             </div>
 
             <div
@@ -1718,109 +1629,24 @@ watch(
                 </button>
               </label>
 
-              <div class="relative shrink-0" data-filter-popover>
-                <button
-                  type="button"
-                  class="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-white text-gray-600 hover:bg-gray-50"
-                  :class="filtersActive || showFilters ? 'border-primary text-primary' : 'border-gray-200'"
-                  :title="t('label_date_filters')"
-                  :aria-label="t('label_date_filters')"
-                  :aria-expanded="showFilters"
-                  @click.stop="openFilters"
-                >
-                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span
-                    v-if="filtersActive"
-                    class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"
-                    aria-hidden="true"
-                  />
-                </button>
-
-                <div
-                  v-if="showFilters"
-                  class="absolute right-0 z-30 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-gray-100 bg-white p-4 shadow-xl"
-                  @click.stop
-                >
-                  <div class="flex items-center justify-between gap-2">
-                    <h3 class="text-sm font-semibold text-gray-900">{{ t('label_filters') }}</h3>
-                    <button
-                      type="button"
-                      class="text-xs font-semibold text-gray-500 hover:text-primary"
-                      @click="clearFilters"
-                    >
-                      {{ t('action_clear') }}
-                    </button>
-                  </div>
-
-                  <label class="mt-4 block text-xs font-medium text-gray-500">{{ t('label_sort') }}</label>
-                  <select
-                    v-model="draftSort"
-                    class="mt-1.5 min-h-10 w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary"
-                  >
-                    <option value="newest">{{ t('sort_newest') }}</option>
-                    <option value="oldest">{{ t('sort_oldest') }}</option>
-                    <option value="name_asc">{{ t('sort_name_asc') }}</option>
-                    <option value="name_desc">{{ t('sort_name_desc') }}</option>
-                  </select>
-
-                  <p class="mt-4 text-xs font-medium text-gray-500">{{ t('label_document_date') }}</p>
-                  <div class="mt-1.5 grid grid-cols-3 gap-1.5">
-                    <button
-                      type="button"
-                      class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                      @click="setDatePreset('clear')"
-                    >
-                      {{ t('filter_any') }}
-                    </button>
-                    <button
-                      type="button"
-                      class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                      @click="setDatePreset('30d')"
-                    >
-                      {{ t('filter_last_30_days') }}
-                    </button>
-                    <button
-                      type="button"
-                      class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-                      @click="setDatePreset('month')"
-                    >
-                      {{ t('filter_this_month') }}
-                    </button>
-                  </div>
-                  <div class="mt-2 grid grid-cols-2 gap-2">
-                    <label class="block">
-                      <span class="sr-only">{{ t('aria_from_date') }}</span>
-                      <input
-                        v-model="draftDateFrom"
-                        type="date"
-                        :min="folderDateBounds?.min"
-                        :max="folderDateBounds?.max"
-                        class="min-h-10 w-full rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
-                      />
-                    </label>
-                    <label class="block">
-                      <span class="sr-only">{{ t('aria_to_date') }}</span>
-                      <input
-                        v-model="draftDateTo"
-                        type="date"
-                        :min="folderDateBounds?.min"
-                        :max="folderDateBounds?.max"
-                        class="min-h-10 w-full rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
-                      />
-                    </label>
-                  </div>
-
-                  <button
-                    type="button"
-                    class="mt-4 flex min-h-10 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white hover:bg-blue-600"
-                    @click="applyFilters"
-                  >
-                    {{ t('action_apply') }}
-                  </button>
-                </div>
-              </div>
+              <button
+                type="button"
+                class="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border bg-white text-gray-600 hover:bg-gray-50"
+                :class="filtersActive || showFilters ? 'border-primary text-primary' : 'border-gray-200'"
+                :title="t('label_date_filters')"
+                :aria-label="t('label_date_filters')"
+                :aria-expanded="showFilters"
+                @click="openFilters"
+              >
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span
+                  v-if="filtersActive"
+                  class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"
+                  aria-hidden="true"
+                />
+              </button>
             </div>
 
             <div
@@ -2002,6 +1828,114 @@ watch(
     </div>
 
     <RouterView />
+
+    <Teleport to="body">
+      <div
+        v-if="showFilters"
+        class="fixed inset-0 z-50 flex items-end justify-center bg-gray-950/40 sm:items-center sm:p-4"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('label_filters')"
+      >
+        <button type="button" class="absolute inset-0 cursor-default" :aria-label="t('action_close')" @click="closeFilters" />
+        <div class="relative z-10 w-full max-w-md overflow-hidden rounded-t-2xl bg-white shadow-xl sm:rounded-2xl">
+          <div class="flex items-center justify-between gap-2 border-b border-gray-100 px-5 py-4">
+            <h2 class="text-sm font-semibold text-gray-900">{{ t('label_filters') }}</h2>
+            <div class="flex items-center gap-1">
+              <button
+                type="button"
+                class="rounded-lg px-2 py-1.5 text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-primary"
+                @click="clearFilters"
+              >
+                {{ t('action_clear') }}
+              </button>
+              <button
+                type="button"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                :aria-label="t('action_close')"
+                @click="closeFilters"
+              >
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-4 px-5 py-4 pb-[max(1rem,var(--rp-sab))]">
+            <div>
+              <label class="block text-xs font-medium text-gray-500">{{ t('label_sort') }}</label>
+              <select
+                v-model="draftSort"
+                class="mt-1.5 min-h-10 w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary"
+              >
+                <option value="newest">{{ t('sort_newest') }}</option>
+                <option value="oldest">{{ t('sort_oldest') }}</option>
+                <option value="name_asc">{{ t('sort_name_asc') }}</option>
+                <option value="name_desc">{{ t('sort_name_desc') }}</option>
+              </select>
+            </div>
+
+            <div>
+              <p class="text-xs font-medium text-gray-500">{{ t('label_document_date') }}</p>
+              <div class="mt-1.5 grid grid-cols-3 gap-1.5">
+                <button
+                  type="button"
+                  class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  @click="setDatePreset('clear')"
+                >
+                  {{ t('filter_any') }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  @click="setDatePreset('30d')"
+                >
+                  {{ t('filter_last_30_days') }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  @click="setDatePreset('month')"
+                >
+                  {{ t('filter_this_month') }}
+                </button>
+              </div>
+              <div class="mt-2 grid grid-cols-2 gap-2">
+                <label class="block">
+                  <span class="sr-only">{{ t('aria_from_date') }}</span>
+                  <input
+                    v-model="draftDateFrom"
+                    type="date"
+                    :min="folderDateBounds?.min"
+                    :max="folderDateBounds?.max"
+                    class="min-h-10 w-full rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
+                  />
+                </label>
+                <label class="block">
+                  <span class="sr-only">{{ t('aria_to_date') }}</span>
+                  <input
+                    v-model="draftDateTo"
+                    type="date"
+                    :min="folderDateBounds?.min"
+                    :max="folderDateBounds?.max"
+                    class="min-h-10 w-full rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="flex min-h-11 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white hover:bg-blue-600"
+              @click="applyFilters"
+            >
+              {{ t('action_apply') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <Teleport to="body">
       <div
