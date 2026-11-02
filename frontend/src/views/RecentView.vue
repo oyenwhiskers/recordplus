@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onActivated, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import api from '@/api/client'
 import { notify } from '@/lib/confirm'
@@ -159,7 +159,8 @@ function clearCategoryFilter() {
   load(true)
 }
 
-onMounted(async () => {
+// KeepAlive: refetch whenever Recent is shown (after Capture confirm, etc.)
+onActivated(async () => {
   await loadCategories()
   await load(true)
 })
@@ -278,7 +279,11 @@ watch(
         </EmptyState>
         <ul v-else class="space-y-3">
           <li v-for="doc in documents" :key="doc.id">
-            <DocumentListRow :doc="doc" variant="card" :category-label="doc.category?.name" />
+            <DocumentListRow
+              :doc="doc"
+              variant="card"
+              :category-label="doc.category?.name ?? doc.suggested_category_name"
+            />
           </li>
         </ul>
         <div v-if="page < lastPage" class="mt-3 text-center">

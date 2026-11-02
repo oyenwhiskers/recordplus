@@ -84,8 +84,10 @@ export interface DocumentItem {
   suggests_new_category: boolean
   original_filename: string
   mime_type?: string | null
+  file_size?: number | null
   ai_error: string | null
   created_at: string
+  updated_at?: string
   extracted_data?: {
     amounts?: DocumentAmountFact[]
     dates?: DocumentDateFact[]

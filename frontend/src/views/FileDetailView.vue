@@ -33,7 +33,6 @@ const editing = ref(false)
 const replacing = ref(false)
 const replaceError = ref('')
 const replaceInput = ref<HTMLInputElement | null>(null)
-const previewUrl = ref<string | null>(null)
 const previewLoading = ref(false)
 const previewError = ref('')
 const showPreview = ref(false)
@@ -79,17 +78,43 @@ const isPdf = computed(() => documentIsPdf(document.value))
 const canPreviewFile = computed(() => isImage.value || isPdf.value)
 
 /**
+ * Same-origin inline file URL (session cookie auth). Avoids axios blob buffering so
+ * the browser can stream/decode and reuse Cache-Control / ETag from the API.
+ */
+function inlineDownloadUrl(doc: DocumentItem, hash = ''): string {
+  const bust = doc.updated_at || doc.file_size || doc.created_at || doc.id
+  const base = `/api/documents/${doc.id}/download?inline=1&v=${encodeURIComponent(String(bust))}`
+  return hash ? `${base}#${hash}` : base
+}
+
+/**
  * Same-origin inline PDF. toolbar=0 hides Chrome/Edge Drive/print/download chrome
  * (our app bar already has Close / Open / Download). view=FitH starts at page-width.
  */
 const pdfPreviewSrc = computed(() => {
   if (!showPreview.value || !document.value || !isPdf.value) return ''
-  return `/api/documents/${document.value.id}/download?inline=1#toolbar=0&navpanes=0&view=FitH`
+  return inlineDownloadUrl(document.value, 'toolbar=0&navpanes=0&view=FitH')
+})
+
+/** Card + lightbox image preview; v= busts cache after replace. */
+const imagePreviewSrc = computed(() => {
+  if (!document.value || !isImage.value) return ''
+  return inlineDownloadUrl(document.value)
 })
 
 function openPdfInNewTab() {
   if (!document.value || !isPdf.value) return
-  window.open(`/api/documents/${document.value.id}/download?inline=1`, '_blank', 'noopener,noreferrer')
+  window.open(inlineDownloadUrl(document.value), '_blank', 'noopener,noreferrer')
+}
+
+function onImagePreviewLoad() {
+  previewLoading.value = false
+  previewError.value = ''
+}
+
+function onImagePreviewError() {
+  previewLoading.value = false
+  previewError.value = t('msg_preview_unavailable')
 }
 
 const amountDisplay = computed(() => {
@@ -212,35 +237,22 @@ function closeModal() {
   router.push(fallbackRecordRoute())
 }
 
-async function loadPreview(doc: DocumentItem) {
+function armImagePreview() {
   previewLoading.value = true
   previewError.value = ''
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
-    previewUrl.value = null
-  }
-
-  try {
-    const { data } = await api.get(`/documents/${doc.id}/download`, { responseType: 'blob' })
-    previewUrl.value = URL.createObjectURL(data)
-  } catch {
-    previewError.value = t('msg_preview_unavailable')
-  } finally {
-    previewLoading.value = false
-  }
 }
 
 async function viewDocument() {
   if (!document.value) return
   showPreview.value = true
-  // PDFs use same-origin iframe URL — no blob fetch.
+  // Images/PDFs use same-origin URL — browser streams; no axios blob buffer.
   if (documentIsPdf(document.value)) {
     previewLoading.value = false
     previewError.value = ''
     return
   }
-  if (!previewUrl.value && !previewLoading.value) {
-    await loadPreview(document.value)
+  if (documentIsImage(document.value) && previewError.value) {
+    armImagePreview()
   }
 }
 
@@ -263,11 +275,8 @@ async function load() {
   loadError.value = ''
   showPreview.value = false
   editing.value = false
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
-    previewUrl.value = null
-  }
   previewError.value = ''
+  previewLoading.value = false
   try {
     const [docRes, catRes] = await Promise.all([
       api.get(`/documents/${id.value}`),
@@ -283,9 +292,9 @@ async function load() {
     document.value = doc
     syncDraft(doc)
     applyCategorySuggestion(doc)
-    // Images only in the inline card — PDF iframe scrolls inside 4:3; open full view on tap.
+    // Images in the inline card — browser loads via <img src>, not a blob fetch.
     if (documentIsImage(doc)) {
-      void loadPreview(doc)
+      armImagePreview()
     }
   } catch (e: any) {
     document.value = null
@@ -319,14 +328,12 @@ function applyDocumentPayload(raw: DocumentItem) {
   return doc
 }
 
-async function refreshPreviewFor(doc: DocumentItem) {
-  if (previewUrl.value) {
-    URL.revokeObjectURL(previewUrl.value)
-    previewUrl.value = null
-  }
+function refreshPreviewFor(doc: DocumentItem) {
   previewError.value = ''
   if (documentIsImage(doc)) {
-    await loadPreview(doc)
+    armImagePreview()
+  } else {
+    previewLoading.value = false
   }
 }
 
@@ -656,7 +663,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', onPreviewKeydown)
   window.document.body.style.overflow = ''
-  if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
 })
 </script>
 
@@ -727,26 +733,32 @@ onUnmounted(() => {
             :aria-label="t('aria_view_document')"
             @click="viewDocument"
           >
-            <div class="aspect-[4/3] w-full overflow-hidden">
-              <div
-                v-if="isImage && previewLoading"
-                class="flex h-full items-center justify-center text-sm text-gray-500"
-              >
-                {{ t('detail_loading_preview') }}
-              </div>
-              <div
-                v-else-if="isImage && previewError"
-                class="flex h-full flex-col items-center justify-center gap-2 px-4 text-center"
-              >
-                <p class="text-sm text-gray-600">{{ previewError }}</p>
-                <span class="text-xs font-semibold text-primary">{{ t('detail_tap_full_view') }}</span>
-              </div>
-              <img
-                v-else-if="previewUrl && isImage"
-                :src="previewUrl"
-                :alt="document.original_filename"
-                class="h-full w-full object-cover"
-              />
+            <div class="relative aspect-[4/3] w-full overflow-hidden">
+              <template v-if="isImage">
+                <img
+                  v-if="imagePreviewSrc && !previewError"
+                  :src="imagePreviewSrc"
+                  :alt="document.original_filename"
+                  class="h-full w-full object-cover"
+                  :class="previewLoading ? 'opacity-0' : 'opacity-100'"
+                  decoding="async"
+                  @load="onImagePreviewLoad"
+                  @error="onImagePreviewError"
+                />
+                <div
+                  v-if="previewLoading"
+                  class="absolute inset-0 flex items-center justify-center text-sm text-gray-500"
+                >
+                  {{ t('detail_loading_preview') }}
+                </div>
+                <div
+                  v-else-if="previewError"
+                  class="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center"
+                >
+                  <p class="text-sm text-gray-600">{{ previewError }}</p>
+                  <span class="text-xs font-semibold text-primary">{{ t('detail_tap_full_view') }}</span>
+                </div>
+              </template>
               <div
                 v-else-if="isPdf"
                 class="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-b from-soft-blue/40 to-gray-50 px-4 text-center"
@@ -1123,19 +1135,42 @@ onUnmounted(() => {
       </header>
 
       <div class="relative min-h-0 flex-1 bg-[#525659]">
+        <iframe
+          v-if="pdfPreviewSrc"
+          :src="pdfPreviewSrc"
+          class="h-full w-full border-0"
+          :title="t('aria_document_preview')"
+        />
+
         <div
-          v-if="previewLoading"
-          class="flex h-full flex-col items-center justify-center gap-3 text-sm text-white/70"
+          v-else-if="isImage && imagePreviewSrc && !previewError"
+          class="relative flex h-full items-center justify-center overflow-auto bg-black px-3 py-4 pb-[max(1rem,var(--rp-sab))]"
+          @click.self="closePreview"
         >
-          <span
-            class="h-8 w-8 animate-spin rounded-full border-2 border-white/25 border-t-white"
-            aria-hidden="true"
+          <img
+            :src="imagePreviewSrc"
+            :alt="document?.original_filename"
+            class="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
+            :class="previewLoading ? 'opacity-0' : 'opacity-100'"
+            decoding="async"
+            @click.stop
+            @load="onImagePreviewLoad"
+            @error="onImagePreviewError"
           />
-          {{ t('detail_loading_preview') }}
+          <div
+            v-if="previewLoading"
+            class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 text-sm text-white/70"
+          >
+            <span
+              class="h-8 w-8 animate-spin rounded-full border-2 border-white/25 border-t-white"
+              aria-hidden="true"
+            />
+            {{ t('detail_loading_preview') }}
+          </div>
         </div>
 
         <div
-          v-else-if="previewError"
+          v-else-if="isImage && previewError"
           class="flex h-full flex-col items-center justify-center gap-4 px-6 text-center"
         >
           <p class="max-w-sm text-sm text-white/80">{{ previewError }}</p>
@@ -1146,26 +1181,6 @@ onUnmounted(() => {
           >
             Download original
           </button>
-        </div>
-
-        <iframe
-          v-else-if="pdfPreviewSrc"
-          :src="pdfPreviewSrc"
-          class="h-full w-full border-0"
-          :title="t('aria_document_preview')"
-        />
-
-        <div
-          v-else-if="previewUrl && isImage"
-          class="flex h-full items-center justify-center overflow-auto bg-black px-3 py-4 pb-[max(1rem,var(--rp-sab))]"
-          @click.self="closePreview"
-        >
-          <img
-            :src="previewUrl"
-            :alt="document?.original_filename"
-            class="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
-            @click.stop
-          />
         </div>
 
         <div

@@ -445,22 +445,39 @@ class DocumentController extends Controller
 
         abort_unless(Storage::disk('local')->exists($document->storage_path), 404);
 
-        // inline=1 for in-app PDF iframe (hash zoom params work on http URLs, not blob:)
+        $headers = [
+            'Content-Type' => $document->mime_type ?: 'application/octet-stream',
+            // Auth-gated; browsers may reuse within the session without a second full download.
+            'Cache-Control' => 'private, max-age=86400',
+        ];
+
+        // inline=1 for in-app PDF/image preview (hash zoom params work on http URLs, not blob:)
         if ($request->boolean('inline')) {
-            return Storage::disk('local')->response(
+            $response = Storage::disk('local')->response(
                 $document->storage_path,
                 $document->original_filename,
-                [
-                    'Content-Type' => $document->mime_type ?: 'application/octet-stream',
-                ],
+                $headers,
                 'inline'
+            );
+        } else {
+            $response = Storage::disk('local')->download(
+                $document->storage_path,
+                $document->original_filename,
+                $headers
             );
         }
 
-        return Storage::disk('local')->download(
-            $document->storage_path,
-            $document->original_filename
-        );
+        $etag = '"'.sha1(implode('|', [
+            (string) $document->id,
+            (string) $document->file_size,
+            $document->updated_at?->getTimestamp() ?? 0,
+            (string) $document->storage_path,
+        ])).'"';
+
+        $response->setEtag($etag);
+        $response->isNotModified($request);
+
+        return $response;
     }
 
     public function move(Request $request, Document $document, FilingEngine $engine): JsonResponse

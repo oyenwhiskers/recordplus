@@ -19,6 +19,7 @@ const data = ref<HomeData | null>(null)
 const error = ref('')
 const year = ref<number | null>(null)
 const loading = ref(false)
+let loadSeq = 0
 
 const showProfileSettings = ref(false)
 const newProfileName = ref('')
@@ -34,18 +35,27 @@ function setEditNameInput(el: Element | null) {
 }
 
 async function load() {
+  const seq = ++loadSeq
   loading.value = true
   error.value = ''
   try {
     const res = await api.get('/dashboard', {
       params: year.value ? { year: year.value } : undefined,
     })
+    if (seq !== loadSeq) {
+      return
+    }
     data.value = res.data
     year.value = res.data.year
   } catch (e: any) {
+    if (seq !== loadSeq) {
+      return
+    }
     error.value = e?.response?.data?.message || t('home_load_error')
   } finally {
-    loading.value = false
+    if (seq === loadSeq) {
+      loading.value = false
+    }
   }
 }
 

@@ -536,12 +536,13 @@ async function changeCategory(item: SessionItem) {
 async function previewDocument(item: SessionItem) {
   if (!item.document) return
 
-  try {
-    const { data } = await api.get(`/documents/${item.document.id}/download`, { responseType: 'blob' })
-    const url = URL.createObjectURL(data)
-    window.open(url, '_blank', 'noopener,noreferrer')
-    window.setTimeout(() => URL.revokeObjectURL(url), 60_000)
-  } catch {
+  // Same-origin inline URL streams in a new tab (no full blob buffer first).
+  const opened = window.open(
+    `/api/documents/${item.document.id}/download?inline=1`,
+    '_blank',
+    'noopener,noreferrer',
+  )
+  if (!opened) {
     notify({ title: t('msg_could_not_open_preview'), icon: 'error' })
   }
 }

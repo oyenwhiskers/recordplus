@@ -13,22 +13,25 @@ use Illuminate\Support\Str;
 
 class DocumentUploadService
 {
-    public function __construct(private DocumentUserLocks $userLocks) {}
+    public function __construct(
+        private DocumentUserLocks $userLocks,
+        private DocumentImageOptimizer $imageOptimizer,
+    ) {}
 
     public function upload(User $user, Profile $profile, UploadedFile $file): Document
     {
         abort_unless($profile->user_id === $user->id, 403);
 
-        $path = $this->storeFile($user->id, $profile->id, $file);
+        $stored = $this->storeFile($user->id, $profile->id, $file);
 
         $document = Document::query()->create([
             'user_id' => $user->id,
             'profile_id' => $profile->id,
             'status' => DocumentStatus::Processing,
             'original_filename' => $file->getClientOriginalName(),
-            'storage_path' => $path,
-            'mime_type' => $file->getMimeType(),
-            'file_size' => $file->getSize() ?: 0,
+            'storage_path' => $stored['path'],
+            'mime_type' => $stored['mime'],
+            'file_size' => $stored['size'],
             'title' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) ?: 'Untitled document',
         ]);
 
@@ -49,22 +52,22 @@ class DocumentUploadService
             $title = $newStem;
         }
 
-        $path = $this->storeFile($document->user_id, $document->profile_id, $file);
+        $stored = $this->storeFile($document->user_id, $document->profile_id, $file);
 
         $this->userLocks->clearFieldLocks($document);
 
         $document->forceFill([
-            'storage_path' => $path,
+            'storage_path' => $stored['path'],
             'original_filename' => $file->getClientOriginalName(),
-            'mime_type' => $file->getMimeType(),
-            'file_size' => $file->getSize() ?: 0,
+            'mime_type' => $stored['mime'],
+            'file_size' => $stored['size'],
             'title' => $title,
             'status' => DocumentStatus::Processing,
             'ai_error' => null,
             'extracted_data' => $document->extracted_data,
         ])->save();
 
-        if ($oldPath && $oldPath !== $path) {
+        if ($oldPath && $oldPath !== $stored['path']) {
             Storage::disk('local')->delete($oldPath);
         }
 
@@ -73,7 +76,10 @@ class DocumentUploadService
         return $document->fresh(['category', 'profile']);
     }
 
-    private function storeFile(int $userId, int $profileId, UploadedFile $file): string
+    /**
+     * @return array{path: string, mime: string, size: int}
+     */
+    private function storeFile(int $userId, int $profileId, UploadedFile $file): array
     {
         $extension = $file->getClientOriginalExtension();
         $path = sprintf(
@@ -84,9 +90,21 @@ class DocumentUploadService
             $extension !== '' ? $extension : 'bin'
         );
 
-        Storage::disk('local')->put($path, file_get_contents($file->getRealPath()) ?: '');
+        $contents = file_get_contents($file->getRealPath()) ?: '';
+        $mime = $file->getMimeType() ?: 'application/octet-stream';
+        $optimized = $this->imageOptimizer->optimize($contents, $mime);
+        if ($optimized !== null) {
+            $contents = $optimized['contents'];
+            $mime = $optimized['mime'];
+        }
 
-        return $path;
+        Storage::disk('local')->put($path, $contents);
+
+        return [
+            'path' => $path,
+            'mime' => $mime,
+            'size' => strlen($contents),
+        ];
     }
 
     private function queueOrSkipAnalysis(User $user, Document $document): void

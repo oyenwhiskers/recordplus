@@ -93,4 +93,18 @@ class CurrencyConversionServiceTest extends TestCase
         $this->assertSame(4.5, $map['2026-03-16|EUR']);
         $this->assertCount(3, $map);
     }
+
+    public function test_prefetch_survives_failed_pool_connections(): void
+    {
+        Http::fake([
+            'api.frankfurter.dev/*' => Http::failedConnection(),
+        ]);
+
+        $map = app(CurrencyConversionService::class)->prefetchRates([
+            ['date' => '2026-03-15', 'from' => 'USD'],
+            ['date' => '2026-03-15', 'from' => 'SGD'],
+        ], 'MYR');
+
+        $this->assertSame([], $map);
+    }
 }

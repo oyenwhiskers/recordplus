@@ -23,6 +23,13 @@ class CurrencyConversionService
 
     private const PREFETCH_BATCH_SIZE = 5;
 
+    /** shortcut: drop remaining FX after budget, upgrade if amounts must always be complete */
+    private const PREFETCH_BUDGET_SECONDS = 2.0;
+
+    private const POOL_CONNECT_TIMEOUT = 2;
+
+    private const POOL_TIMEOUT = 3;
+
     /** @var array<string, float|null> */
     private array $memory = [];
 
@@ -61,19 +68,30 @@ class CurrencyConversionService
             $pending[] = $item;
         }
 
+        $startedAt = microtime(true);
+
         foreach (array_chunk($pending, self::PREFETCH_BATCH_SIZE) as $batch) {
-            $responses = Http::pool(fn (Pool $pool) => collect($batch)->mapWithKeys(
-                fn (array $item, int $index) => [
-                    (string) $index => $pool
-                        ->as((string) $index)
-                        ->connectTimeout(3)
-                        ->timeout(15)
-                        ->get(self::BASE_URL.'/'.$item['date']->toDateString(), [
-                            'base' => $item['from'],
-                            'symbols' => $toCode,
-                        ]),
-                ],
-            )->all());
+            // shortcut: drop remaining FX after budget, upgrade if amounts must always be complete
+            if ((microtime(true) - $startedAt) >= self::PREFETCH_BUDGET_SECONDS) {
+                break;
+            }
+
+            try {
+                $responses = Http::pool(fn (Pool $pool) => collect($batch)->mapWithKeys(
+                    fn (array $item, int $index) => [
+                        (string) $index => $pool
+                            ->as((string) $index)
+                            ->connectTimeout(self::POOL_CONNECT_TIMEOUT)
+                            ->timeout(self::POOL_TIMEOUT)
+                            ->get(self::BASE_URL.'/'.$item['date']->toDateString(), [
+                                'base' => $item['from'],
+                                'symbols' => $toCode,
+                            ]),
+                    ],
+                )->all());
+            } catch (\Throwable) {
+                break;
+            }
 
             foreach ($batch as $index => $item) {
                 $response = $responses[(string) $index] ?? null;

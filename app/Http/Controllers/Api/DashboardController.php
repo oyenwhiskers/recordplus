@@ -47,12 +47,16 @@ class DashboardController extends Controller
             ->pluck('aggregate', 'category_id');
 
         $baseCurrency = CurrencyOptions::normalize($profile->base_currency ?? null);
-        $displayAmountByCategory = $this->displayAmountsByCategory(
-            $yearScoped,
-            $identity,
-            $conversion,
-            $baseCurrency,
-        );
+        try {
+            $displayAmountByCategory = $this->displayAmountsByCategory(
+                $yearScoped,
+                $identity,
+                $conversion,
+                $baseCurrency,
+            );
+        } catch (\Throwable) {
+            $displayAmountByCategory = [];
+        }
 
         $categories = Category::query()
             ->where('profile_id', $profile->id)

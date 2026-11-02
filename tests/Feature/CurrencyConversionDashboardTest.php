@@ -133,4 +133,46 @@ class CurrencyConversionDashboardTest extends TestCase
         $byName = collect($response->json('categories'))->keyBy('name');
         $this->assertSame('SGD 30.00', $byName['Expenses']['display_amount'] ?? null);
     }
+
+    public function test_dashboard_returns_counts_when_frankfurter_connection_fails(): void
+    {
+        Http::fake([
+            'api.frankfurter.dev/*' => Http::failedConnection(),
+        ]);
+
+        $user = User::factory()->create();
+        $profile = app(ProfileOnboardingService::class)->onboard($user);
+        $expenses = $this->categoryFor($profile);
+
+        Document::factory()->create([
+            'user_id' => $user->id,
+            'profile_id' => $profile->id,
+            'category_id' => $expenses->id,
+            'status' => DocumentStatus::Filed,
+            'document_date' => '2026-03-15',
+            'amount' => '5.00',
+            'currency' => 'USD',
+        ]);
+
+        Document::factory()->create([
+            'user_id' => $user->id,
+            'profile_id' => $profile->id,
+            'category_id' => $expenses->id,
+            'status' => DocumentStatus::Filed,
+            'document_date' => '2026-03-15',
+            'amount' => '10.00',
+            'currency' => 'MYR',
+        ]);
+
+        $response = $this->actingAs($user)->getJson('/api/dashboard?year=2026');
+
+        $response->assertOk();
+        $byName = collect($response->json('categories'))->keyBy('name');
+        $this->assertSame(2, $byName['Expenses']['documents_count'] ?? null);
+        // FX soft-fails: foreign amount skipped; base-currency MYR may still sum.
+        $this->assertTrue(
+            $byName['Expenses']['display_amount'] === null
+            || $byName['Expenses']['display_amount'] === 'MYR 10.00',
+        );
+    }
 }

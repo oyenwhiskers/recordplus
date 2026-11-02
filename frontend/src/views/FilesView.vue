@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onActivated, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
@@ -222,10 +222,10 @@ function showStatusBadge(doc: DocumentItem): boolean {
 }
 
 function categoryLabelFor(doc: DocumentItem): string | null {
-  if (categoryId.value || !doc.category?.name) {
+  if (categoryId.value) {
     return null
   }
-  return doc.category.name
+  return doc.category?.name ?? doc.suggested_category_name ?? null
 }
 
 async function loadCategories() {
@@ -1120,7 +1120,8 @@ function selectCategory(id: number) {
   router.push({ name: 'files-browse', params: { categoryId: String(id) } })
 }
 
-onMounted(async () => {
+// KeepAlive: refetch whenever Files is shown (after Capture confirm, etc.)
+onActivated(async () => {
   await syncFromRoute()
 })
 
