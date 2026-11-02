@@ -67,9 +67,10 @@ const metaLine = computed(() => {
   return parts.length ? parts.join(' · ') : null
 })
 
-const showFooter = computed(
-  () => Boolean(metaLine.value || props.showStatus || showMenu.value),
-)
+/** Footer only when there is date/category/status — avoid empty divider band. */
+const showFooter = computed(() => Boolean(metaLine.value || props.showStatus))
+/** Menu sits in the title row when there is no footer to host it. */
+const menuInHeader = computed(() => showMenu.value && !showFooter.value)
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
@@ -177,48 +178,24 @@ onUnmounted(() => {
     @pointerleave="onPointerUp"
     @contextmenu="onContextMenu"
   >
-    <button
-      v-if="selectionMode"
-      type="button"
-      class="flex w-full items-center gap-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-      :aria-pressed="isSelected"
-      :aria-label="isSelected ? t('aria_deselect_document') : t('aria_select_document')"
-      @click="onActivate"
-    >
-      <span
-        class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border"
-        :class="isSelected ? 'border-primary bg-primary text-white' : 'border-gray-300 bg-white text-transparent'"
-        aria-hidden="true"
+    <div class="flex items-center gap-2">
+      <button
+        v-if="selectionMode"
+        type="button"
+        class="flex min-w-0 flex-1 items-center gap-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        :aria-pressed="isSelected"
+        :aria-label="isSelected ? t('aria_deselect_document') : t('aria_select_document')"
+        @click="onActivate"
       >
-        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-        </svg>
-      </span>
-      <span class="min-w-0 flex-1">
-        <span class="block truncate text-[15px] font-semibold text-gray-900">{{ title }}</span>
         <span
-          v-if="referenceNumber"
-          class="mt-0.5 block truncate text-xs text-gray-500"
+          class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border"
+          :class="isSelected ? 'border-primary bg-primary text-white' : 'border-gray-300 bg-white text-transparent'"
+          aria-hidden="true"
         >
-          {{ t('label_ref_prefix') }} {{ referenceNumber }}
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
         </span>
-      </span>
-      <span
-        v-if="amountValue"
-        class="shrink-0 text-sm font-semibold tabular-nums text-primary"
-      >
-        {{ amountValue }}
-      </span>
-    </button>
-
-    <RouterLink
-      v-else
-      :to="`/files/${doc.id}`"
-      class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-      :class="variant === 'card' ? 'hover:opacity-95' : ''"
-      @click="onActivate"
-    >
-      <span class="flex items-center gap-3">
         <span class="min-w-0 flex-1">
           <span class="block truncate text-[15px] font-semibold text-gray-900">{{ title }}</span>
           <span
@@ -234,8 +211,86 @@ onUnmounted(() => {
         >
           {{ amountValue }}
         </span>
-      </span>
-    </RouterLink>
+      </button>
+
+      <RouterLink
+        v-else
+        :to="`/files/${doc.id}`"
+        class="min-w-0 flex-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        :class="variant === 'card' ? 'hover:opacity-95' : ''"
+        @click="onActivate"
+      >
+        <span class="flex items-center gap-3">
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-[15px] font-semibold text-gray-900">{{ title }}</span>
+            <span
+              v-if="referenceNumber"
+              class="mt-0.5 block truncate text-xs text-gray-500"
+            >
+              {{ t('label_ref_prefix') }} {{ referenceNumber }}
+            </span>
+          </span>
+          <span
+            v-if="amountValue"
+            class="shrink-0 text-sm font-semibold tabular-nums text-primary"
+          >
+            {{ amountValue }}
+          </span>
+        </span>
+      </RouterLink>
+
+      <div v-if="menuInHeader" class="relative shrink-0" data-doc-menu>
+        <button
+          type="button"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          :aria-label="t('aria_document_actions')"
+          :aria-expanded="menuOpen"
+          @click.stop="toggleMenu"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 7a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm0 6.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM12 20a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" />
+          </svg>
+        </button>
+        <div
+          v-if="menuOpen"
+          class="absolute right-0 z-30 mt-1 min-w-[11.5rem] overflow-hidden rounded-xl border border-gray-100 bg-gray-50 py-1 shadow-lg"
+          role="menu"
+        >
+          <button
+            type="button"
+            class="block w-full px-4 py-2.5 text-left text-sm text-gray-900 hover:bg-white"
+            role="menuitem"
+            @click.stop="pick('share')"
+          >
+            {{ t('menu_share_document') }}
+          </button>
+          <button
+            type="button"
+            class="block w-full px-4 py-2.5 text-left text-sm text-gray-900 hover:bg-white"
+            role="menuitem"
+            @click.stop="pick('move')"
+          >
+            {{ t('menu_move_profile') }}
+          </button>
+          <button
+            type="button"
+            class="block w-full px-4 py-2.5 text-left text-sm text-gray-900 hover:bg-white"
+            role="menuitem"
+            @click.stop="pick('change_category')"
+          >
+            {{ t('menu_change_category') }}
+          </button>
+          <button
+            type="button"
+            class="block w-full px-4 py-2.5 text-left text-sm text-gray-900 hover:bg-white"
+            role="menuitem"
+            @click.stop="pick('delete')"
+          >
+            {{ t('menu_delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
 
     <div
       v-if="showFooter"
@@ -253,7 +308,7 @@ onUnmounted(() => {
         {{ metaLine }}
       </button>
       <RouterLink
-        v-else
+        v-else-if="metaLine"
         :to="`/files/${doc.id}`"
         class="min-w-0 flex-1 truncate text-xs text-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         :class="variant === 'card' ? 'hover:opacity-95' : ''"
@@ -261,6 +316,7 @@ onUnmounted(() => {
       >
         {{ metaLine }}
       </RouterLink>
+      <span v-else class="min-w-0 flex-1" />
 
       <StatusBadge
         v-if="showStatus"

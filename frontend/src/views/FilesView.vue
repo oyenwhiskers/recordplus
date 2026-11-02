@@ -1248,7 +1248,7 @@ watch(
 </script>
 
 <template>
-  <AppPage width="fluid" fill :class="selectionMode ? '!pb-2' : undefined">
+  <AppPage width="fluid" fill>
     <div class="flex min-h-0 flex-1 flex-col gap-5 overflow-hidden">
       <div class="grid min-h-0 flex-1 gap-5 overflow-hidden lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-6">
         <!-- Desktop sidebar -->
@@ -1459,7 +1459,7 @@ watch(
           </div>
 
           <!-- Category folder grid -->
-          <div v-if="useCategoryBrowse && !browseReady" class="flex min-h-0 flex-1 flex-col pb-2">
+          <div v-if="useCategoryBrowse && !browseReady" class="flex min-h-0 flex-1 flex-col">
             <p v-if="facetsLoading" class="py-3 text-sm text-gray-500">{{ t('files_loading_months') }}</p>
             <template v-else-if="dateFacets">
               <div
@@ -1620,7 +1620,6 @@ watch(
           <div
             v-else-if="isFolderDetail"
             class="relative flex min-h-0 flex-1 flex-col"
-            :class="selectionMode ? 'pb-0' : 'pb-2'"
           >
             <div class="flex items-center gap-2">
               <button
@@ -1733,7 +1732,7 @@ watch(
                   :title="appliedQ || filtersActive ? t('files_empty_match_title') : t('files_empty_folder_title')"
                   :description="appliedQ || filtersActive ? t('files_empty_folder_match_desc') : t('files_empty_folder_desc')"
                 />
-                <ul v-else-if="documents.length" class="space-y-3 pb-3">
+                <ul v-else-if="documents.length" class="space-y-3 pb-1">
                   <li v-for="doc in documents" :key="doc.id">
                     <DocumentListRow
                       :doc="doc"
@@ -1748,7 +1747,7 @@ watch(
                     />
                   </li>
                 </ul>
-                <div v-if="hasMore" class="pb-3 text-center">
+                <div v-if="hasMore" class="pb-1 text-center">
                   <button
                     type="button"
                     class="min-h-10 rounded-xl px-4 text-sm font-semibold text-primary hover:underline disabled:opacity-60"
@@ -1780,7 +1779,6 @@ watch(
           <div
             v-else
             class="flex min-h-0 flex-1 flex-col"
-            :class="selectionMode ? 'pb-0' : 'pb-2'"
           >
             <div
               v-if="selectionMode"
@@ -1830,7 +1828,7 @@ watch(
                     {{ t('action_clear_filters') }}
                   </button>
                 </EmptyState>
-                <ul v-else-if="documents.length" class="space-y-3 pb-3">
+                <ul v-else-if="documents.length" class="space-y-3 pb-1">
                   <li v-for="doc in documents" :key="doc.id">
                     <DocumentListRow
                       :doc="doc"
@@ -1846,7 +1844,7 @@ watch(
                     />
                   </li>
                 </ul>
-                <div v-if="hasMore" class="mt-2 pb-3 text-center">
+                <div v-if="hasMore" class="mt-2 pb-1 text-center">
                   <button
                     type="button"
                     class="min-h-10 rounded-xl px-4 text-sm font-semibold text-primary hover:underline disabled:opacity-60"

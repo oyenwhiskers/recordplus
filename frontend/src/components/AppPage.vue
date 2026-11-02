@@ -21,8 +21,10 @@ const widthClass: Record<string, string> = {
   <div
     :class="[
       widthClass[width],
-      'px-4 py-6 sm:px-6 lg:px-8',
-      fill ? 'box-border flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden overflow-y-hidden' : '',
+      'px-4 sm:px-6 lg:px-8',
+      fill
+        ? 'box-border flex h-full min-h-0 min-w-0 flex-col overflow-x-hidden overflow-y-hidden pt-4 pb-2 sm:pt-6'
+        : 'py-6',
     ]"
   >
     <slot />
