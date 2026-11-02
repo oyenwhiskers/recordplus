@@ -243,7 +243,10 @@ async function deleteProfile(profile: Profile) {
 
 function openCategory(id: number) {
   const y = year.value
-  if (y != null) {
+  const count = data.value?.categories.find((c) => c.id === id)?.documents_count ?? 0
+  // Home counts are year-scoped; if this category is empty in the selected year,
+  // open unscoped browse so Record can land on a year that actually has docs.
+  if (y != null && count > 0) {
     router.push({ name: 'files-year', params: { categoryId: String(id), year: String(y) } })
     return
   }

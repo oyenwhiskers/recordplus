@@ -87,12 +87,20 @@ function openDateFilter() {
   draftDateFrom.value = dateFrom.value
   draftDateTo.value = dateTo.value
   showCategoryFilter.value = false
-  showDateFilter.value = !showDateFilter.value
+  showDateFilter.value = true
+}
+
+function closeDateFilter() {
+  showDateFilter.value = false
 }
 
 function openCategoryFilter() {
   showDateFilter.value = false
-  showCategoryFilter.value = !showCategoryFilter.value
+  showCategoryFilter.value = true
+}
+
+function closeCategoryFilter() {
+  showCategoryFilter.value = false
 }
 
 function applyDateFilter() {
@@ -151,22 +159,12 @@ function clearCategoryFilter() {
   load(true)
 }
 
-function onOutsideClick(event: MouseEvent) {
-  const target = event.target as HTMLElement | null
-  if (!target?.closest('[data-filter-popover]')) {
-    showDateFilter.value = false
-    showCategoryFilter.value = false
-  }
-}
-
 onMounted(async () => {
-  document.addEventListener('click', onOutsideClick)
   await loadCategories()
   await load(true)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', onOutsideClick)
   if (searchTimer) clearTimeout(searchTimer)
 })
 
@@ -189,7 +187,7 @@ watch(
 <template>
   <AppPage width="fluid" fill>
     <div class="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col gap-4 overflow-hidden">
-      <div class="relative flex shrink-0 items-center gap-2" data-filter-popover>
+      <div class="relative flex shrink-0 items-center gap-2">
         <label class="relative min-w-0 flex-1">
           <span class="sr-only">{{ t('aria_search_recent') }}</span>
           <svg
@@ -219,7 +217,7 @@ watch(
           :title="t('label_date_filter')"
           :aria-label="t('label_date_filter')"
           :aria-expanded="showDateFilter"
-          @click.stop="openDateFilter"
+          @click="openDateFilter"
         >
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -238,7 +236,7 @@ watch(
           :title="t('label_category_filter')"
           :aria-label="t('label_category_filter')"
           :aria-expanded="showCategoryFilter"
-          @click.stop="openCategoryFilter"
+          @click="openCategoryFilter"
         >
           <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 4h18l-7 8v5l-4 2v-7L3 4z" />
@@ -249,114 +247,6 @@ watch(
             aria-hidden="true"
           />
         </button>
-
-        <div
-          v-if="showDateFilter"
-          class="absolute inset-x-0 top-full z-30 mt-2 max-h-[min(24rem,70vh)] overflow-y-auto rounded-2xl border border-gray-100 bg-white p-4 shadow-xl"
-          @click.stop
-        >
-          <div class="flex items-center justify-between gap-2">
-            <h3 class="text-sm font-semibold text-gray-900">{{ t('label_date') }}</h3>
-            <button
-              type="button"
-              class="text-xs font-semibold text-gray-500 hover:text-primary"
-              @click="clearDateFilter"
-            >
-              {{ t('action_clear') }}
-            </button>
-          </div>
-
-          <p class="mt-4 text-xs font-medium text-gray-500">{{ t('label_document_date') }}</p>
-          <div class="mt-1.5 grid grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-              @click="setDatePreset('clear')"
-            >
-              {{ t('filter_any') }}
-            </button>
-            <button
-              type="button"
-              class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-              @click="setDatePreset('30d')"
-            >
-              {{ t('filter_last_30_days') }}
-            </button>
-            <button
-              type="button"
-              class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
-              @click="setDatePreset('month')"
-            >
-              {{ t('filter_this_month') }}
-            </button>
-          </div>
-          <div class="mt-2 grid min-w-0 grid-cols-2 gap-2">
-            <label class="block min-w-0">
-              <span class="sr-only">{{ t('aria_from_date') }}</span>
-              <input
-                v-model="draftDateFrom"
-                type="date"
-                class="min-h-10 w-full min-w-0 rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
-              />
-            </label>
-            <label class="block min-w-0">
-              <span class="sr-only">{{ t('aria_to_date') }}</span>
-              <input
-                v-model="draftDateTo"
-                type="date"
-                class="min-h-10 w-full min-w-0 rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
-              />
-            </label>
-          </div>
-
-          <button
-            type="button"
-            class="mt-4 flex min-h-10 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white hover:bg-blue-600"
-            @click="applyDateFilter"
-          >
-            {{ t('action_apply') }}
-          </button>
-        </div>
-
-        <div
-          v-if="showCategoryFilter"
-          class="absolute inset-x-0 top-full z-30 mt-2 max-h-[min(24rem,70vh)] overflow-y-auto rounded-2xl border border-gray-100 bg-white p-2 shadow-xl"
-          @click.stop
-        >
-          <div class="flex items-center justify-between gap-2 px-2 py-1.5">
-            <h3 class="text-sm font-semibold text-gray-900">{{ t('label_category') }}</h3>
-            <button
-              v-if="categoryFilterActive"
-              type="button"
-              class="text-xs font-semibold text-gray-500 hover:text-primary"
-              @click="clearCategoryFilter"
-            >
-              {{ t('action_clear') }}
-            </button>
-          </div>
-          <ul class="max-h-64 overflow-y-auto">
-            <li>
-              <button
-                type="button"
-                class="flex min-h-10 w-full items-center rounded-xl px-3 text-left text-sm"
-                :class="categoryId === '' ? 'bg-soft-blue font-semibold text-primary' : 'text-gray-600 hover:bg-gray-50'"
-                @click="selectCategory('')"
-              >
-                {{ t('files_all_categories') }}
-              </button>
-            </li>
-            <li v-for="cat in categories" :key="cat.id">
-              <button
-                type="button"
-                class="flex min-h-10 w-full items-center rounded-xl px-3 text-left text-sm"
-                :class="categoryId === cat.id ? 'bg-soft-blue font-semibold text-primary' : 'text-gray-600 hover:bg-gray-50'"
-                @click="selectCategory(cat.id)"
-              >
-                <span class="truncate">{{ cat.name }}</span>
-              </button>
-            </li>
-          </ul>
-        </div>
       </div>
 
       <p
@@ -403,5 +293,156 @@ watch(
         </div>
       </div>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="showDateFilter"
+        class="fixed inset-0 z-50 flex items-end justify-center bg-gray-950/40 sm:items-center sm:p-4"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('label_date_filter')"
+      >
+        <button type="button" class="absolute inset-0 cursor-default" :aria-label="t('action_close')" @click="closeDateFilter" />
+        <div class="relative z-10 w-full max-w-md overflow-hidden rounded-t-2xl bg-white shadow-xl sm:rounded-2xl">
+          <div class="flex items-center justify-between gap-2 border-b border-gray-100 px-5 py-4">
+            <h2 class="text-sm font-semibold text-gray-900">{{ t('label_date') }}</h2>
+            <div class="flex items-center gap-1">
+              <button
+                type="button"
+                class="rounded-lg px-2 py-1.5 text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-primary"
+                @click="clearDateFilter"
+              >
+                {{ t('action_clear') }}
+              </button>
+              <button
+                type="button"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                :aria-label="t('action_close')"
+                @click="closeDateFilter"
+              >
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-4 px-5 py-4 pb-[max(1rem,var(--rp-sab))]">
+            <div>
+              <p class="text-xs font-medium text-gray-500">{{ t('label_document_date') }}</p>
+              <div class="mt-1.5 grid grid-cols-3 gap-1.5">
+                <button
+                  type="button"
+                  class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  @click="setDatePreset('clear')"
+                >
+                  {{ t('filter_any') }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  @click="setDatePreset('30d')"
+                >
+                  {{ t('filter_last_30_days') }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-9 rounded-lg border border-gray-200 px-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  @click="setDatePreset('month')"
+                >
+                  {{ t('filter_this_month') }}
+                </button>
+              </div>
+              <div class="mt-2 grid min-w-0 grid-cols-2 gap-2">
+                <label class="block min-w-0">
+                  <span class="sr-only">{{ t('aria_from_date') }}</span>
+                  <input
+                    v-model="draftDateFrom"
+                    type="date"
+                    class="min-h-10 w-full min-w-0 rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
+                  />
+                </label>
+                <label class="block min-w-0">
+                  <span class="sr-only">{{ t('aria_to_date') }}</span>
+                  <input
+                    v-model="draftDateTo"
+                    type="date"
+                    class="min-h-10 w-full min-w-0 rounded-xl border border-gray-200 px-2 text-sm outline-none focus:border-primary"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="flex min-h-11 w-full items-center justify-center rounded-xl bg-primary text-sm font-semibold text-white hover:bg-blue-600"
+              @click="applyDateFilter"
+            >
+              {{ t('action_apply') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <Teleport to="body">
+      <div
+        v-if="showCategoryFilter"
+        class="fixed inset-0 z-50 flex items-end justify-center bg-gray-950/40 sm:items-center sm:p-4"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="t('label_category_filter')"
+      >
+        <button type="button" class="absolute inset-0 cursor-default" :aria-label="t('action_close')" @click="closeCategoryFilter" />
+        <div class="relative z-10 flex max-h-[min(28rem,80vh)] w-full max-w-md flex-col overflow-hidden rounded-t-2xl bg-white shadow-xl sm:rounded-2xl">
+          <div class="flex shrink-0 items-center justify-between gap-2 border-b border-gray-100 px-5 py-4">
+            <h2 class="text-sm font-semibold text-gray-900">{{ t('label_category') }}</h2>
+            <div class="flex items-center gap-1">
+              <button
+                v-if="categoryFilterActive"
+                type="button"
+                class="rounded-lg px-2 py-1.5 text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-primary"
+                @click="clearCategoryFilter"
+              >
+                {{ t('action_clear') }}
+              </button>
+              <button
+                type="button"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+                :aria-label="t('action_close')"
+                @click="closeCategoryFilter"
+              >
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <ul class="min-h-0 flex-1 overflow-y-auto px-2 py-2 pb-[max(0.5rem,var(--rp-sab))]">
+            <li>
+              <button
+                type="button"
+                class="flex min-h-11 w-full items-center rounded-xl px-3 text-left text-sm"
+                :class="categoryId === '' ? 'bg-soft-blue font-semibold text-primary' : 'text-gray-600 hover:bg-gray-50'"
+                @click="selectCategory('')"
+              >
+                {{ t('files_all_categories') }}
+              </button>
+            </li>
+            <li v-for="cat in categories" :key="cat.id">
+              <button
+                type="button"
+                class="flex min-h-11 w-full items-center rounded-xl px-3 text-left text-sm"
+                :class="categoryId === cat.id ? 'bg-soft-blue font-semibold text-primary' : 'text-gray-600 hover:bg-gray-50'"
+                @click="selectCategory(cat.id)"
+              >
+                <span class="truncate">{{ cat.name }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </Teleport>
   </AppPage>
 </template>

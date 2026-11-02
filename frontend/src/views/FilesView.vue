@@ -354,9 +354,25 @@ async function syncFromRoute() {
     return
   }
 
-  browseYear.value = preferredYear ?? resolvedYear
-
+  // loadDateFacets already drops preferredYear when this category has no docs that year.
+  // Never keep the Home/URL year anyway — that left an empty month grid while
+  // documents_count (delete dialog) still showed docs in other years.
   if (name === 'files-year') {
+    if (resolvedYear != null && preferredYear !== resolvedYear) {
+      await router.replace({
+        name: 'files-year',
+        params: { categoryId: String(catId), year: String(resolvedYear) },
+      })
+      return
+    }
+    if (resolvedYear == null) {
+      await router.replace({
+        name: 'files-browse',
+        params: { categoryId: String(catId) },
+      })
+      return
+    }
+    browseYear.value = resolvedYear
     documents.value = []
     total.value = 0
     await loadDocuments(true)
@@ -364,6 +380,14 @@ async function syncFromRoute() {
   }
 
   if (name === 'files-month') {
+    if (resolvedYear != null && preferredYear !== resolvedYear) {
+      await router.replace({
+        name: 'files-year',
+        params: { categoryId: String(catId), year: String(resolvedYear) },
+      })
+      return
+    }
+    browseYear.value = resolvedYear
     if (browseMonth.value == null || browseYear.value == null) {
       await router.replace({
         name: 'files-year',
