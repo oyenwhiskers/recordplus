@@ -159,6 +159,8 @@ class DocumentInterpretationTest extends TestCase
 
     public function test_certificate_without_money_preserves_nulls(): void
     {
+        $this->travelTo('2026-11-02 10:00:00');
+
         $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([
             'document_type' => 'Academic Certificate',
             'merchant' => 'UMS',
@@ -174,6 +176,82 @@ class DocumentInterpretationTest extends TestCase
         $this->assertNull($result['amount']);
         $this->assertSame('2024-10-01', $result['document_date']);
         $this->assertFalse($result['extracted_data']['interpretation']['expense_eligible']);
+    }
+
+    public function test_receipt_year_far_from_today_is_rejected_as_uncertain(): void
+    {
+        $this->travelTo('2026-11-02 10:00:00');
+
+        $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([
+            'document_type' => 'Receipt',
+            'merchant' => 'Jollibee (Centre Point)',
+            'reference_number' => 'p2kp-2644-6g9b',
+            'amounts' => [[
+                'value' => 34.09,
+                'currency' => 'MYR',
+                'role' => 'paid',
+                'payment_status' => 'paid',
+                'uncertain' => false,
+            ]],
+            'dates' => [[
+                'value' => '2024-10-26',
+                'role' => 'transaction',
+                'uncertain' => false,
+            ]],
+        ], []);
+
+        $this->assertNull($result['document_date']);
+        $this->assertTrue($result['extracted_data']['dates'][0]['uncertain']);
+        $this->assertSame('34.09', $result['amount']);
+    }
+
+    public function test_receipt_year_within_one_of_today_is_kept(): void
+    {
+        $this->travelTo('2026-11-02 10:00:00');
+
+        $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([
+            'document_type' => 'Receipt',
+            'merchant' => 'Store',
+            'amounts' => [[
+                'value' => 28.18,
+                'currency' => 'MYR',
+                'role' => 'paid',
+                'payment_status' => 'paid',
+                'uncertain' => false,
+            ]],
+            'dates' => [[
+                'value' => '2025-10-26',
+                'role' => 'transaction',
+                'uncertain' => false,
+            ]],
+        ], []);
+
+        $this->assertSame('2025-10-26', $result['document_date']);
+    }
+
+    public function test_receipt_with_completed_current_year_is_kept(): void
+    {
+        $this->travelTo('2026-11-02 10:00:00');
+
+        $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([
+            'document_type' => 'Receipt',
+            'merchant' => 'DubuYo (KK Times Square)',
+            'reference_number' => 'q7kw-2644-focn',
+            'amounts' => [[
+                'value' => 28.18,
+                'currency' => 'MYR',
+                'role' => 'paid',
+                'payment_status' => 'paid',
+                'uncertain' => false,
+            ]],
+            'dates' => [[
+                'value' => '2026-10-26',
+                'role' => 'transaction',
+                'uncertain' => false,
+            ]],
+        ], []);
+
+        $this->assertSame('2026-10-26', $result['document_date']);
     }
 
     public function test_missing_information_stays_unknown(): void

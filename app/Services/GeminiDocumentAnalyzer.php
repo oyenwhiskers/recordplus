@@ -103,10 +103,12 @@ class GeminiDocumentAnalyzer
         $amountRoles = implode(', ', DocumentInterpreter::AMOUNT_ROLES);
         $paymentStatuses = implode(', ', DocumentInterpreter::PAYMENT_STATUSES);
         $dateRoles = implode(', ', DocumentInterpreter::DATE_ROLES);
+        $today = now()->timezone(config('app.timezone'))->format('Y-m-d');
 
         $prompt = <<<PROMPT
 You are the document understanding engine for RecordPlus, an intelligent filing assistant.
 The user is filing into the profile named "{$profileName}". Never select or change the profile.
+Today's date is {$today} (app timezone). Use only as calendar context — never invent document contents from it.
 
 Read the uploaded document image or PDF. Return ONLY valid JSON.
 Understand what the document is, its purpose/activity, and the meaning of important amounts and dates.
@@ -153,7 +155,10 @@ Marketplace / e-commerce order pages (Shopee, TikTok Shop, etc.):
 dates: zero or more objects:
 { "value": "YYYY-MM-DD", "role": one of [{$dateRoles}], "uncertain": boolean }
 Include document/transaction/due/expiry/renewal/period dates only when clearly present.
-Do not invent a document date. Partial labels without a full calendar date (e.g. "7 Nov" with no year) are not enough — omit them; the app defaults undated filings to the upload date.
+Do not invent a document date from unrelated digits.
+When day+month is clearly printed without a year (e.g. "Delivered on 26 Oct"), complete YYYY from today's year ONLY if that full date falls within the past 90 days or next 7 days relative to today's date; otherwise omit the date (the app defaults undated filings to the upload date).
+Never invent a year from order/reference number digits (e.g. "2644" in an order id is not year 2024).
+Do not use rating deadlines ("Rate by …") as the document/transaction date; those may use role due only when a full YYYY-MM-DD is printed.
 Guaranteed or estimated delivery may use role due only when a full YYYY-MM-DD is clearly readable.
 
 Also include optional type-specific keys only when clearly readable (otherwise omit or null):
@@ -333,6 +338,8 @@ PROMPT;
             $documentType = 'Invoice';
         }
 
+        $dates = $this->rejectImplausiblePurchaseDates($dates, $documentType);
+
         $sanitized = [
             'document_type' => $documentType,
             'merchant' => $this->nullableString($parsed['merchant'] ?? null),
@@ -460,6 +467,36 @@ PROMPT;
         }
 
         return $out;
+    }
+
+    /**
+     * Receipt/invoice document or transaction years more than one calendar year from today
+     * are usually hallucinations (e.g. inventing 2024 from order id "2644" when the label
+     * was only "26 Oct"). Mark uncertain so browse date falls back to upload day.
+     *
+     * @param  list<array{value: string, role: string, uncertain: bool}>  $dates
+     * @return list<array{value: string, role: string, uncertain: bool}>
+     */
+    private function rejectImplausiblePurchaseDates(array $dates, ?string $documentType): array
+    {
+        if (! in_array($documentType, ['Receipt', 'Invoice'], true)) {
+            return $dates;
+        }
+
+        $currentYear = (int) now()->timezone(config('app.timezone'))->format('Y');
+
+        return array_map(function (array $date) use ($currentYear): array {
+            if (! in_array($date['role'], ['document', 'transaction'], true) || $date['uncertain']) {
+                return $date;
+            }
+
+            $year = (int) substr($date['value'], 0, 4);
+            if (abs($year - $currentYear) > 1) {
+                $date['uncertain'] = true;
+            }
+
+            return $date;
+        }, $dates);
     }
 
     /**

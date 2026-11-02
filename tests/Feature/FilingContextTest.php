@@ -307,7 +307,10 @@ class FilingContextTest extends TestCase
                 && str_contains($text, 'Academic Certificate')
                 && str_contains($text, 'Payment not completed (COD')
                 && str_contains($text, 'These are purchase records')
-                && str_contains($text, 'defaults undated filings to the upload date');
+                && str_contains($text, 'defaults undated filings to the upload date')
+                && str_contains($text, "Today's date is ")
+                && str_contains($text, 'Never invent a year from order/reference number digits')
+                && str_contains($text, 'Do not use rating deadlines');
         });
     }
 
