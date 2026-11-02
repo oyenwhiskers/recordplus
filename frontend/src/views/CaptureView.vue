@@ -533,18 +533,12 @@ async function changeCategory(item: SessionItem) {
   }
 }
 
-async function previewDocument(item: SessionItem) {
+function previewDocument(item: SessionItem) {
   if (!item.document) return
 
-  // Same-origin inline URL streams in a new tab (no full blob buffer first).
-  const opened = window.open(
-    `/api/documents/${item.document.id}/download?inline=1`,
-    '_blank',
-    'noopener,noreferrer',
-  )
-  if (!opened) {
-    notify({ title: t('msg_could_not_open_preview'), icon: 'error' })
-  }
+  // In-app detail (KeepAlive preserves this session). Avoid window.open(/api/.../download):
+  // production PWAs often open that tab without the SPA session → auth/error page.
+  void router.push({ name: 'file-detail', params: { id: String(item.document.id) } })
 }
 
 function dropSessionItem(localId: string) {
@@ -1128,7 +1122,7 @@ onUnmounted(() => {
                   :disabled="item.confirming || confirmingAll"
                   @click="confirmFiling(item, 'create')"
                 >
-                  {{ item.confirming ? t('capture_filing') : t('action_create') }}
+                  {{ item.confirming ? t('capture_filing') : t('action_confirm') }}
                 </button>
                 <button
                   v-else
