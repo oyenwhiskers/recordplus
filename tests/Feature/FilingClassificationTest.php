@@ -84,6 +84,42 @@ class FilingClassificationTest extends TestCase
         $this->assertSame('Sales', $document->suggested_category_name);
     }
 
+    public function test_fuel_receipt_supplier_purchase_reuses_expenses_not_vehicles(): void
+    {
+        $user = User::factory()->create();
+        $profile = app(ProfileOnboardingService::class)->onboard($user);
+        $expenses = $this->categoryFor($profile, 'Expenses');
+        $this->categoryFor($profile, 'Vehicles');
+
+        $document = Document::factory()->create([
+            'user_id' => $user->id,
+            'profile_id' => $profile->id,
+            'status' => DocumentStatus::Processing,
+        ]);
+
+        app(FilingEngine::class)->applyExtraction($document, [
+            'document_type' => 'Receipt',
+            'title' => null,
+            'document_date' => '2026-10-01',
+            'merchant' => 'Shell',
+            'reference_number' => null,
+            'amount' => '60.00',
+            'currency' => 'MYR',
+            'recommended_category_id' => null,
+            'suggested_new_category_name' => null,
+            'filing_context' => 'supplier_purchase',
+            'extracted_data' => [
+                'filing_context' => 'supplier_purchase',
+            ],
+        ]);
+
+        $document->refresh();
+        $this->assertSame(DocumentStatus::NeedsReview, $document->status);
+        $this->assertNull($document->category_id);
+        $this->assertFalse($document->suggests_new_category);
+        $this->assertSame($expenses->name, $document->suggested_category_name);
+    }
+
     public function test_synonym_reuses_existing_vehicles_category(): void
     {
         $user = User::factory()->create();

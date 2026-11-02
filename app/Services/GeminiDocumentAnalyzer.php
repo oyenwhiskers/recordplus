@@ -129,8 +129,11 @@ document_type must be one of: {$typesList}, or null if unknown.
 
 filing_context must be one of: {$contextsList}, or null if unknown.
 It describes the activity/subject (e.g. vehicle, employment_income, supplier_purchase, customer_sale), not the file format.
-Examples: road tax or motor policy -> vehicle; payslip -> employment_income; invoice you issued to a customer -> customer_sale;
+Examples: road tax, vehicle registration, or motor insurance policy -> vehicle; payslip -> employment_income; invoice you issued to a customer -> customer_sale;
 invoice/bill from a supplier -> supplier_purchase; SESB electricity bill -> household_utility; degree certificate -> education.
+Fuel / petrol / diesel / gas-station / EV charging receipts are ordinary purchases: filing_context supplier_purchase
+(not vehicle). Prefer an existing Purchases or Expenses category over Vehicles for those.
+Reserve vehicle for ownership/compliance docs (road tax, registration, grant, motor policy) — not day-to-day fuel spend.
 
 merchant means the most relevant organisation when present (issuer, merchant, bank, insurer, institution, brand owner).
 reference_number means invoice/receipt/policy/agreement/reference id when present.

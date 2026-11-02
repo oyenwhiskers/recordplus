@@ -310,7 +310,9 @@ class FilingContextTest extends TestCase
                 && str_contains($text, 'defaults undated filings to the upload date')
                 && str_contains($text, "Today's date is ")
                 && str_contains($text, 'Never invent a year from order/reference number digits')
-                && str_contains($text, 'Do not use rating deadlines');
+                && str_contains($text, 'Do not use rating deadlines')
+                && str_contains($text, 'Fuel / petrol / diesel')
+                && str_contains($text, 'not day-to-day fuel spend');
         });
     }
 
