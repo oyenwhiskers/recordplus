@@ -27,6 +27,7 @@ class GeminiDocumentAnalyzer
     /** @var list<string> */
     public const FILING_CONTEXTS = [
         'vehicle',
+        'fuel',
         'employment_income',
         'supplier_purchase',
         'customer_sale',
@@ -112,7 +113,7 @@ Today's date is {$today} (app timezone). Use only as calendar context — never 
 
 Read the uploaded document image or PDF. Return ONLY valid JSON.
 Understand what the document is, its purpose/activity, and the meaning of important amounts and dates.
-Classify by meaningful purpose and subject — not by document format alone.
+Classify by meaningful purpose and subject — not by document format alone, and not by loose keyword association.
 Do not invent values. Use null or omit when unknown. Do not assume every document is financial.
 Do not treat every amount as an expense. Monetary role and payment_status are different concepts.
 
@@ -128,12 +129,20 @@ suggested_new_category_name (string or null), amounts (array), dates (array).
 document_type must be one of: {$typesList}, or null if unknown.
 
 filing_context must be one of: {$contextsList}, or null if unknown.
-It describes the activity/subject (e.g. vehicle, employment_income, supplier_purchase, customer_sale), not the file format.
-Examples: road tax, vehicle registration, or motor insurance policy -> vehicle; payslip -> employment_income; invoice you issued to a customer -> customer_sale;
-invoice/bill from a supplier -> supplier_purchase; SESB electricity bill -> household_utility; degree certificate -> education.
-Fuel / petrol / diesel / gas-station / EV charging receipts are ordinary purchases: filing_context supplier_purchase
-(not vehicle). Prefer an existing Purchases or Expenses category over Vehicles for those.
-Reserve vehicle for ownership/compliance docs (road tax, registration, grant, motor policy) — not day-to-day fuel spend.
+It describes the real-world activity/subject of THIS document, not the file format and not a guessed theme from a single word.
+Infer context from the whole receipt: merchant identity, what was sold, line items, units, and layout.
+Examples: road tax, vehicle registration, or motor insurance policy -> vehicle; payslip -> employment_income;
+invoice you issued to a customer -> customer_sale; invoice/bill from a supplier for goods/services -> supplier_purchase;
+SESB electricity bill -> household_utility; degree certificate -> education.
+
+Merchant understanding (required):
+- Identify who the merchant is and what kind of business they run from evidence on the document
+  (brand/logo, station name, product names, pump/nozzle, litres/gallons, RON/diesel grades, etc.).
+- Fuel-station merchants (e.g. Petron, Petronas, Shell, Caltex, BHP, or any pump/station receipt) -> filing_context fuel.
+  Prefer an existing Fuel or Gas category; otherwise suggest "Fuel" (not Vehicles, not a one-off merchant name).
+- vehicle is ONLY for ownership/compliance documents (road tax, registration, grant, motor policy).
+  A fuel purchase is NOT vehicle context — even though cars use fuel. Do not keyword-match "car", "motor",
+  "pump", or a petrol brand into Vehicles.
 
 merchant means the most relevant organisation when present (issuer, merchant, bank, insurer, institution, brand owner).
 reference_number means invoice/receipt/policy/agreement/reference id when present.
@@ -177,9 +186,10 @@ Filing rules:
 - Prefer reusing an existing category id when it fits the document's purpose.
 - recommended_category_id must be one of those category ids when an existing category fits, otherwise null.
 - suggested_new_category_name must be null when recommended_category_id is set.
-- Only suggest a new short reusable category name when no existing category fits (e.g. Vehicles, Employment, Health).
+- Only suggest a new short reusable category name when no existing category fits (e.g. Fuel, Vehicles, Employment, Health).
+- For fuel-station receipts, reuse Fuel or Gas if present; do not invent Petrol / Vehicle Fuel / Car Fuel / merchant-named folders.
 - Never suggest category names for a single document, merchant, invoice number, amount, month, or year
-  (bad: "Shell Receipt October", "Etiqa Policy 2026", "Invoice 001").
+  (bad: "Shell Receipt October", "Petron Receipt", "Etiqa Policy 2026", "Invoice 001").
 - Do not force Payslip -> Expenses, Invoice -> Expenses, or Insurance Policy -> Insurance when another existing category fits better.
 PROMPT;
 

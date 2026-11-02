@@ -30,6 +30,7 @@ class FilingEngine
      */
     private const CATEGORY_SYNONYM_GROUPS = [
         ['vehicle', 'vehicles', 'car documents', 'motor documents', 'car', 'cars'],
+        ['fuel', 'gas', 'petrol', 'diesel', 'gasoline', 'fuel expenses', 'vehicle fuel', 'car fuel'],
         ['employment', 'work records', 'career documents', 'work', 'payroll', 'human resources', 'hr'],
         ['education', 'education records', 'academic', 'school', 'qualifications'],
         ['health', 'healthcare', 'medical', 'medical records'],
@@ -518,6 +519,7 @@ class FilingEngine
         if ($filingContext !== null) {
             return match ($filingContext) {
                 'vehicle' => 'Vehicles',
+                'fuel' => 'Fuel',
                 'employment_income' => 'Employment',
                 'supplier_purchase' => 'Purchases',
                 'customer_sale' => 'Sales',

@@ -311,8 +311,9 @@ class FilingContextTest extends TestCase
                 && str_contains($text, "Today's date is ")
                 && str_contains($text, 'Never invent a year from order/reference number digits')
                 && str_contains($text, 'Do not use rating deadlines')
-                && str_contains($text, 'Fuel / petrol / diesel')
-                && str_contains($text, 'not day-to-day fuel spend');
+                && str_contains($text, 'filing_context fuel')
+                && str_contains($text, 'Do not keyword-match')
+                && str_contains($text, 'Merchant understanding');
         });
     }
 
@@ -394,5 +395,22 @@ class FilingContextTest extends TestCase
 
         $this->assertNull($result['filing_context']);
         $this->assertArrayNotHasKey('filing_context', $result['extracted_data']);
+    }
+
+    public function test_sanitize_extraction_keeps_fuel_filing_context(): void
+    {
+        $result = app(GeminiDocumentAnalyzer::class)->sanitizeExtraction([
+            'document_type' => 'Receipt',
+            'merchant' => 'Petron',
+            'filing_context' => 'fuel',
+            'recommended_category_id' => null,
+            'suggested_new_category_name' => 'Fuel',
+            'amounts' => [],
+            'dates' => [],
+        ], []);
+
+        $this->assertSame('fuel', $result['filing_context']);
+        $this->assertSame('fuel', $result['extracted_data']['filing_context'] ?? null);
+        $this->assertSame('Fuel', $result['suggested_new_category_name']);
     }
 }
