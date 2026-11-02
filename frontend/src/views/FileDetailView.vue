@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import api, { ensureCsrf } from '@/api/client'
 import { useAuthStore } from '@/stores/auth'
 import type { Category, DocumentItem } from '@/types'
+import LoadingModal from '@/components/LoadingModal.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import { confirmAction, notify, promptCategoryChoice, promptMoveToProfile, showSuccess } from '@/lib/confirm'
 import {
@@ -713,9 +714,9 @@ onUnmounted(() => {
           </button>
         </div>
 
-        <div v-if="loading" class="px-5 py-8 text-sm text-gray-500 sm:px-6">{{ t('detail_loading') }}</div>
+        <LoadingModal :show="loading" :label="t('detail_loading')" />
 
-        <div v-else-if="loadError || !document" class="px-5 py-8 text-sm text-red-600 sm:px-6">
+        <div v-if="!loading && (loadError || !document)" class="px-5 py-8 text-sm text-red-600 sm:px-6">
           {{ loadError || t('detail_not_found') }}
         </div>
 

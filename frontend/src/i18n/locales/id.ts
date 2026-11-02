@@ -353,6 +353,8 @@ export default {
   msg_could_not_delete_category: 'Tidak dapat menghapus kategori.',
   category_settings_title: 'Pengaturan kategori',
   category_settings_desc: 'Tambah atau kelola kategori',
+  aria_reorder_category: 'Seret untuk menyusun ulang kategori',
+  msg_could_not_reorder_categories: 'Tidak dapat menyusun ulang kategori.',
   label_new_category: 'Kategori baru',
   msg_no_categories_yet: 'Belum ada kategori.',
   needs_review_label: 'Perlu ditinjau',

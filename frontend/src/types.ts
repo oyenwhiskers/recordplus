@@ -9,6 +9,7 @@ export interface Category {
   id: number
   profile_id: number
   name: string
+  sort_order?: number
   documents_count?: number
 }
 

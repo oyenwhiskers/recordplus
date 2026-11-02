@@ -8,6 +8,7 @@ import { useAuthStore } from '@/stores/auth'
 import type { HomeData, Profile } from '@/types'
 import AppPage from '@/components/AppPage.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import LoadingModal from '@/components/LoadingModal.vue'
 import PwaInstallOffer from '@/components/PwaInstallOffer.vue'
 
 defineOptions({ name: 'HomeView' })
@@ -320,7 +321,8 @@ watch(
       </div>
 
       <p v-if="error" class="shrink-0 text-sm text-red-600">{{ error }}</p>
-      <p v-else-if="loading && !data" class="shrink-0 text-sm text-gray-500">{{ t('action_loading') }}</p>
+
+      <LoadingModal :show="loading && !data" />
 
       <template v-if="data">
         <div class="shrink-0 rounded-2xl border border-gray-100 bg-white px-3 py-2.5 sm:px-4">

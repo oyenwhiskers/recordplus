@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import api, { ensureCsrf } from '@/api/client'
 import AppPage from '@/components/AppPage.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import LoadingModal from '@/components/LoadingModal.vue'
 import PageHeader from '@/components/PageHeader.vue'
 
 const { t } = useI18n()
@@ -355,9 +356,10 @@ onUnmounted(() => {
     </div>
 
     <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
-    <p v-if="loading" class="text-sm text-gray-500">{{ t('action_loading') }}</p>
 
-    <div v-else class="overflow-x-auto rounded-2xl border border-gray-100 bg-white">
+    <LoadingModal :show="loading" />
+
+    <div v-if="users.length || !loading" class="overflow-x-auto rounded-2xl border border-gray-100 bg-white">
       <table class="min-w-full text-sm">
         <thead class="border-b border-gray-100 bg-background text-xs font-semibold uppercase tracking-wide text-gray-500">
           <tr>
@@ -490,8 +492,8 @@ onUnmounted(() => {
         </div>
 
         <div class="overflow-y-auto px-5 py-5 sm:px-6">
-          <p v-if="detailLoading" class="text-sm text-gray-500">{{ t('admin_loading_details') }}</p>
-          <p v-else-if="detailError" class="text-sm text-red-600">{{ detailError }}</p>
+          <LoadingModal :show="detailLoading" :label="t('admin_loading_details')" />
+          <p v-if="!detailLoading && detailError" class="text-sm text-red-600">{{ detailError }}</p>
 
           <div v-else-if="detail" class="space-y-5">
             <section>

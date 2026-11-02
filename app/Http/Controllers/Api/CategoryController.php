@@ -9,6 +9,7 @@ use App\Models\Document;
 use App\Models\Profile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -20,7 +21,6 @@ class CategoryController extends Controller
 
         $categories = $profile->categories()
             ->withCount('documents')
-            ->orderBy('name')
             ->get();
 
         return response()->json([
@@ -53,9 +53,41 @@ class CategoryController extends Controller
         $category = Category::query()->create([
             'profile_id' => $profile->id,
             'name' => $name,
+            'sort_order' => Category::nextSortOrder($profile->id),
         ]);
 
         return response()->json(['category' => $category->loadCount('documents')], 201);
+    }
+
+    public function reorder(Request $request): JsonResponse
+    {
+        $profile = $this->activeProfile($request);
+
+        $data = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer', 'distinct'],
+        ]);
+
+        $ids = array_values($data['ids']);
+        $ownedIds = $profile->categories()->pluck('id')->all();
+
+        if (count($ids) !== count($ownedIds) || array_diff($ids, $ownedIds) !== []) {
+            throw ValidationException::withMessages([
+                'ids' => ['Provide every category for the active profile, and no others.'],
+            ]);
+        }
+
+        DB::transaction(function () use ($ids): void {
+            foreach ($ids as $index => $id) {
+                Category::query()->whereKey($id)->update(['sort_order' => $index]);
+            }
+        });
+
+        $categories = $profile->categories()
+            ->withCount('documents')
+            ->get();
+
+        return response()->json(['categories' => $categories]);
     }
 
     public function update(Request $request, Category $category): JsonResponse

@@ -41,7 +41,7 @@ class Profile extends Model
 
     public function categories(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Category::class)->orderBy('sort_order')->orderBy('name');
     }
 
     public function documents(): HasMany

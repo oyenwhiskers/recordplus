@@ -354,6 +354,8 @@ export default {
   msg_could_not_delete_category: 'Could not delete category.',
   category_settings_title: 'Category settings',
   category_settings_desc: 'Add or manage categories',
+  aria_reorder_category: 'Drag to reorder category',
+  msg_could_not_reorder_categories: 'Could not reorder categories.',
   label_new_category: 'New category',
   msg_no_categories_yet: 'No categories yet.',
   needs_review_label: 'Needs review',

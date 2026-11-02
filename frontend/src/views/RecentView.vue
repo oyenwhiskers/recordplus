@@ -8,6 +8,7 @@ import type { Category, DocumentItem } from '@/types'
 import AppPage from '@/components/AppPage.vue'
 import DocumentListRow from '@/components/DocumentListRow.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import LoadingModal from '@/components/LoadingModal.vue'
 
 defineOptions({ name: 'RecentView' })
 
@@ -262,9 +263,8 @@ watch(
       </p>
 
       <div class="flex min-h-0 flex-1 flex-col overflow-y-auto pb-4">
-        <p v-if="loading" class="text-sm text-gray-500">{{ t('action_loading') }}</p>
         <EmptyState
-          v-else-if="!documents.length"
+          v-if="!loading && !documents.length"
           icon="document"
           :title="appliedQ || filtersActive ? t('recent_empty_match_title') : t('recent_empty_title')"
           :description="appliedQ || filtersActive ? t('files_empty_match_desc') : t('recent_empty_desc')"
@@ -277,7 +277,7 @@ watch(
             {{ t('action_go_to_capture') }}
           </RouterLink>
         </EmptyState>
-        <ul v-else class="space-y-3">
+        <ul v-else-if="documents.length" class="space-y-3">
           <li v-for="doc in documents" :key="doc.id">
             <DocumentListRow
               :doc="doc"
@@ -298,6 +298,8 @@ watch(
         </div>
       </div>
     </div>
+
+    <LoadingModal :show="loading" />
 
     <Teleport to="body">
       <div

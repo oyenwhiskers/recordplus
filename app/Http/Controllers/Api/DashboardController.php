@@ -60,6 +60,7 @@ class DashboardController extends Controller
 
         $categories = Category::query()
             ->where('profile_id', $profile->id)
+            ->orderBy('sort_order')
             ->orderBy('name')
             ->get()
             ->map(fn (Category $category) => [

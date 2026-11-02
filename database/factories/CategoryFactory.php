@@ -18,6 +18,7 @@ class CategoryFactory extends Factory
         return [
             'profile_id' => Profile::factory(),
             'name' => fake()->unique()->words(2, true),
+            'sort_order' => 0,
         ];
     }
 }

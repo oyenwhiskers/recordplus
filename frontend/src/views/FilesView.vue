@@ -10,6 +10,7 @@ import AppPage from '@/components/AppPage.vue'
 import DocumentListRow from '@/components/DocumentListRow.vue'
 import type { DocumentMenuAction } from '@/components/DocumentListRow.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import LoadingModal from '@/components/LoadingModal.vue'
 import { confirmAction, notify, promptCategoryChoice, promptMoveToProfile, showError, showSuccess } from '@/lib/confirm'
 import { primary as documentPrimary } from '@/lib/documentDisplay'
 import { canShareFiles, shareBlobFile } from '@/lib/shareFile'
@@ -73,6 +74,9 @@ const editingCategoryId = ref<number | null>(null)
 const editingCategoryName = ref('')
 const editingCategoryError = ref('')
 const savingCategoryRename = ref(false)
+const draggingCategoryId = ref<number | null>(null)
+const categoryOrderDirty = ref(false)
+const savingCategoryOrder = ref(false)
 const editNameInput = ref<HTMLInputElement | null>(null)
 
 function setEditNameInput(el: Element | null) {
@@ -952,6 +956,85 @@ function cancelCategoryRename() {
   clearCategoryRename()
 }
 
+function moveCategoryBefore(fromId: number, toId: number) {
+  if (fromId === toId) {
+    return
+  }
+  const list = [...categories.value]
+  const fromIndex = list.findIndex((c) => c.id === fromId)
+  const toIndex = list.findIndex((c) => c.id === toId)
+  if (fromIndex < 0 || toIndex < 0) {
+    return
+  }
+  const [moved] = list.splice(fromIndex, 1)
+  list.splice(toIndex, 0, moved)
+  categories.value = list
+  categoryOrderDirty.value = true
+}
+
+function onCategoryPointerDown(event: PointerEvent, cat: Category) {
+  if (editingCategoryId.value != null || savingCategoryOrder.value || event.button !== 0) {
+    return
+  }
+  event.preventDefault()
+  draggingCategoryId.value = cat.id
+  categoryOrderDirty.value = false
+  ;(event.currentTarget as HTMLElement | null)?.setPointerCapture(event.pointerId)
+}
+
+function onCategoryPointerMove(event: PointerEvent) {
+  const fromId = draggingCategoryId.value
+  if (fromId == null) {
+    return
+  }
+  const el = document.elementFromPoint(event.clientX, event.clientY)
+  const row = el?.closest('[data-category-id]') as HTMLElement | null
+  if (!row) {
+    return
+  }
+  const toId = Number(row.dataset.categoryId)
+  if (!Number.isFinite(toId) || toId === fromId) {
+    return
+  }
+  moveCategoryBefore(fromId, toId)
+}
+
+async function onCategoryPointerUp(event: PointerEvent) {
+  if (draggingCategoryId.value == null) {
+    return
+  }
+  const handle = event.currentTarget as HTMLElement | null
+  if (handle?.hasPointerCapture(event.pointerId)) {
+    handle.releasePointerCapture(event.pointerId)
+  }
+  draggingCategoryId.value = null
+  if (categoryOrderDirty.value) {
+    categoryOrderDirty.value = false
+    await persistCategoryOrder()
+  }
+}
+
+async function persistCategoryOrder() {
+  if (savingCategoryOrder.value) {
+    return
+  }
+  savingCategoryOrder.value = true
+  try {
+    await ensureCsrf()
+    const { data } = await api.patch('/categories/reorder', {
+      ids: categories.value.map((c) => c.id),
+    })
+    if (Array.isArray(data.categories)) {
+      categories.value = data.categories
+    }
+  } catch (e: any) {
+    await loadCategories()
+    await categoryError(e?.response?.data?.message || e?.response?.data?.errors?.ids?.[0] || t('msg_could_not_reorder_categories'))
+  } finally {
+    savingCategoryOrder.value = false
+  }
+}
+
 async function createCategory() {
   const name = newCategoryName.value.trim()
   if (!name || savingCategory.value) return
@@ -1644,14 +1727,13 @@ watch(
 
             <div class="mt-3 flex min-h-0 flex-1 flex-col">
               <div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
-                <p v-if="loading" class="text-sm text-gray-500">{{ t('action_loading') }}</p>
                 <EmptyState
-                  v-else-if="!documents.length"
+                  v-if="!loading && !documents.length"
                   icon="document"
                   :title="appliedQ || filtersActive ? t('files_empty_match_title') : t('files_empty_folder_title')"
                   :description="appliedQ || filtersActive ? t('files_empty_folder_match_desc') : t('files_empty_folder_desc')"
                 />
-                <ul v-else class="space-y-3 pb-3">
+                <ul v-else-if="documents.length" class="space-y-3 pb-3">
                   <li v-for="doc in documents" :key="doc.id">
                     <DocumentListRow
                       :doc="doc"
@@ -1726,9 +1808,8 @@ watch(
 
             <div class="flex min-h-0 flex-1 flex-col">
               <div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
-                <p v-if="loading" class="text-sm text-gray-500">{{ t('action_loading') }}</p>
                 <EmptyState
-                  v-else-if="!documents.length"
+                  v-if="!loading && !documents.length"
                   icon="document"
                   :title="emptyCopy.title"
                   :description="emptyCopy.description"
@@ -1749,7 +1830,7 @@ watch(
                     {{ t('action_clear_filters') }}
                   </button>
                 </EmptyState>
-                <ul v-else class="space-y-3 pb-3">
+                <ul v-else-if="documents.length" class="space-y-3 pb-3">
                   <li v-for="doc in documents" :key="doc.id">
                     <DocumentListRow
                       :doc="doc"
@@ -1795,6 +1876,8 @@ watch(
         </section>
       </div>
     </div>
+
+    <LoadingModal :show="loading" />
 
     <RouterView />
 
@@ -1959,7 +2042,29 @@ watch(
             v-for="cat in categories"
             :key="cat.id"
             class="flex items-center gap-1 px-3 py-3"
+            :class="{ 'opacity-60 bg-soft-blue/40': draggingCategoryId === cat.id }"
+            :data-category-id="cat.id"
           >
+            <button
+              v-if="editingCategoryId !== cat.id"
+              type="button"
+              class="inline-flex h-9 w-7 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-gray-300 hover:bg-gray-100 hover:text-gray-500 active:cursor-grabbing disabled:opacity-60"
+              :aria-label="t('aria_reorder_category')"
+              :disabled="savingCategoryOrder"
+              @pointerdown="onCategoryPointerDown($event, cat)"
+              @pointermove="onCategoryPointerMove"
+              @pointerup="onCategoryPointerUp"
+              @pointercancel="onCategoryPointerUp"
+            >
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="9" cy="6" r="1.5" />
+                <circle cx="15" cy="6" r="1.5" />
+                <circle cx="9" cy="12" r="1.5" />
+                <circle cx="15" cy="12" r="1.5" />
+                <circle cx="9" cy="18" r="1.5" />
+                <circle cx="15" cy="18" r="1.5" />
+              </svg>
+            </button>
             <div v-if="editingCategoryId === cat.id" class="min-w-0 flex-1">
               <input
                 :ref="setEditNameInput"

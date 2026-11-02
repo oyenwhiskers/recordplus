@@ -351,6 +351,8 @@ export default {
   msg_could_not_delete_category: '无法删除分类。',
   category_settings_title: '分类设置',
   category_settings_desc: '添加或管理分类',
+  aria_reorder_category: '拖动以重新排序分类',
+  msg_could_not_reorder_categories: '无法重新排序分类。',
   label_new_category: '新分类',
   msg_no_categories_yet: '暂无分类。',
   needs_review_label: '待审核',

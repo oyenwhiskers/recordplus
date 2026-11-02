@@ -283,6 +283,7 @@ class FilingEngine
             ?? Category::query()->create([
                 'profile_id' => $document->profile_id,
                 'name' => $name,
+                'sort_order' => Category::nextSortOrder((int) $document->profile_id),
             ]);
 
         return $this->confirmFiling($document, $category);
